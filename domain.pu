@@ -1,0 +1,97 @@
+@startuml
+
+title ドメイン設計
+
+package ユーザ集約 {
+  class ユーザ {
+    ユーザID: String
+    + 名前: String [0..255]
+    + メールアドレス: String [0..255]
+    + パスワード: String [1..12]
+    + 自己紹介: String [0..2500]
+    + スキル: List<スキル>
+    + 経歴: List<経歴>
+  }
+
+  class スキル {
+    スキルID: String
+    + 評価: Integer [1..5]
+    + 年数: Integer [0..5]
+  }
+
+  class 経歴 {
+    経歴ID: String
+    + 詳細: String [0..1000]
+    + 西暦from: Integer [1970..*]
+    + 西暦to: Integer [1970..*]
+  }
+}
+
+package メンター募集集約 {
+  class メンター募集 {
+    メンター募集ID: String
+    + タイトル: String [0..255]
+    + カテゴリ: String
+    + 相談形式: String
+    + 相談方式: String
+    + ディスクリプション: String [0..2000]
+    + 予算: Integer [1000..*]
+    + 応募期間: Integer [1..14]
+    + ステータス: String
+  }
+}
+
+package メンター提案集約 {
+  class メンター提案 {
+    メンター提案ID: String
+    + 提案内容: String [0..2000]
+  }
+}
+
+package プラン集約 {
+  class プラン {
+    プランID: String
+    + タイトル: String [0..255]
+    + カテゴリ: String
+    + 内容: String [0..2000]
+    + ステータス: String
+    + 相談形式: String
+    + 金額: Integer
+    + 相談方式: String
+  }
+}
+
+package 契約リクエスト集約 {
+  class 契約リクエスト {
+    契約リクエストID: String
+    + メッセージ: String [0..500]
+  }
+}
+
+package 契約承認集約 {
+  class 契約承認 {
+    契約承認ID: String
+    + メッセージ: String [0..500]
+  }
+}
+
+package タグ集約 {
+  class タグ {
+    タグID: String
+    + タグ名 String
+  }
+}
+
+ユーザ "1" -- "0..*" スキル : 所有
+ユーザ "1" -- "0..*" 経歴 : 所有
+ユーザ "1" -- "0..*" メンター募集 : 作成
+ユーザ "1" -- "0..*" メンター提案 : 作成
+ユーザ "1" -- "0..*" プラン : 作成
+メンター募集 "1" -- "0..*" メンター提案 : 受け取る
+メンター募集 "1" -- "0..*" タグ
+プラン "1" -- "0..5" タグ
+プラン "1" -- "0..1" 契約リクエスト : 受け取る
+契約リクエスト "1" -- "0..1" 契約承認
+スキル "1" -- "0..1" タグ: 所有
+
+@enduml
