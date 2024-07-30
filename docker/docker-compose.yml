@@ -1,9 +1,20 @@
+version: '3'
 services:
+  go:
+    build:
+      context: ..
+      dockerfile: docker/golang.Dockerfile
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../src:/go/src
+
   db:
     build:
-      context: .
-      dockerfile: mysql.Dockerfile
+      context: ..
+      dockerfile: docker/mysql.Dockerfile
     container_name: mysql_container
+    platform: linux/amd64
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: golang_db

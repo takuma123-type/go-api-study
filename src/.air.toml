@@ -1,0 +1,18 @@
+[build]
+  bin = "tmp/main" # バイナリの出力先
+  cmd = "cd cmd && go build -o ../tmp/main ." # ビルドコマンド
+  include_ext = ["go"] # 監視するファイル拡張子
+  exclude_dir = ["tmp", "vendor"] # 除外するディレクトリ
+  exclude_file = [] # 除外するファイル
+  follow_symlink = true # シンボリックリンクを追従するか
+  full_build = false # フルビルドを行うか
+
+[run]
+  cmd = "tmp/main" # 実行するコマンド
+  watch_dir = ["."] # 監視するディレクトリ
+  watch_ext = ["go"] # 監視するファイル拡張子
+  ignore = ["tmp", "vendor"] # 無視するパス
+  delay = 200 # 再ビルド間隔（ミリ秒）
+
+[log]
+  level = "debug" # ログレベル
