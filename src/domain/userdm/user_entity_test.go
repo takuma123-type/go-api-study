@@ -15,8 +15,8 @@ func TestNewUser(t *testing.T) {
 		t.Fatalf("Expected no error, got %v", err)
 	}
 
-	if user.ID != userID {
-		t.Errorf("Expected userID %v, got %v", userID, user.ID)
+	if user.ID() != userID {
+		t.Errorf("Expected userID %v, got %v", userID, user.ID())
 	}
 
 	if user.FirstName() != "John" {
