@@ -2,7 +2,7 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/takuma123-type/go-api-study/interface/controller"
+	"github.com/takuma123-type/go-api-study/src/interface/controller"
 )
 
 // healthRouter registers the health check route.
