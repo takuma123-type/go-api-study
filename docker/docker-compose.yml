@@ -6,11 +6,11 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ..:/go/src
+      - ../:/go/src
 
   db:
     build:
-      context: .
+      context: ..
       dockerfile: docker/mysql.Dockerfile
     container_name: mysql_container
     environment:
