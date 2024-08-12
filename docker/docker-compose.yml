@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   go:
     build:
@@ -8,12 +6,12 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ../src:/go/src
+      - ../:/go/src
 
   db:
     build:
-      context: .
-      dockerfile: mysql.Dockerfile
+      context: ..
+      dockerfile: docker/mysql.Dockerfile
     container_name: mysql_container
     environment:
       MYSQL_ROOT_PASSWORD: password

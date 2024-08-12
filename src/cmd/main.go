@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/takuma123-type/go-api-study/infra/router"
+	"github.com/takuma123-type/go-api-study/src/infra/router"
 )
 
 func main() {
