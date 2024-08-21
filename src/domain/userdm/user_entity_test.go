@@ -39,7 +39,7 @@ func TestNewUser(t *testing.T) {
 			userID := NewUserID()
 			createdAt := shared.NewCreatedAt()
 
-			user, err := newUser(userID, tt.firstName, tt.lastName, createdAt)
+			user, err := NewUser(userID, tt.firstName, tt.lastName, createdAt)
 
 			if tt.expectErr {
 				assert.Error(t, err)

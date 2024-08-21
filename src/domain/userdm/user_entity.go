@@ -32,7 +32,7 @@ var (
 	lastNameLength  = 30
 )
 
-func newUser(id UserID, first, last string, createdAt shared.CreatedAt) (*User, error) {
+func NewUser(id UserID, first, last string, createdAt shared.CreatedAt) (*User, error) {
 	if first == "" {
 		return nil, xerrors.New("first name must be not empty")
 	}
