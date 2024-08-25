@@ -3,7 +3,6 @@ package userusecase
 import (
 	"context"
 
-	"github.com/takuma123-type/go-api-study/src/domain/shared"
 	"github.com/takuma123-type/go-api-study/src/domain/userdm"
 	"github.com/takuma123-type/go-api-study/src/usecase/userusecase/userinput"
 	"github.com/takuma123-type/go-api-study/src/usecase/userusecase/useroutput"
@@ -21,11 +20,7 @@ func NewCreateUser(userRepo userdm.UserRepository) *CreateUserUsecase {
 
 func (use *CreateUserUsecase) Exec(ctx context.Context, in *userinput.CreateUserInput) (*useroutput.CreateUserOutput, error) {
 
-	userID := userdm.NewUserID()
-
-	createdAt := shared.NewCreatedAt()
-
-	user, err := userdm.NewUser(userID, in.FirstName, in.LastName, createdAt)
+	user, err := userdm.GenWhenCreate(in.FirstName, in.LastName)
 	if err != nil {
 		return nil, err
 	}

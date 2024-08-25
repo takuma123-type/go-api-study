@@ -3,8 +3,10 @@ package smperr
 import (
 	"fmt"
 	"net/http"
+	"unicode/utf8"
 
 	"github.com/pkg/errors"
+	"gorm.io/gorm"
 )
 
 type appErr struct {
@@ -45,6 +47,42 @@ func (e *appErr) Error() string {
 func (e *appErr) Trace() error {
 	return e.trace
 }
+
+func Errorf(format string, args ...interface{}) error {
+	return fmt.Errorf(format, args...)
+}
+
+const lastNameLength = 50
+
+func validateLastName(last string) (interface{}, error) {
+	if l := utf8.RuneCountInString(last); l > lastNameLength {
+		return nil, fmt.Errorf("last name must be less than %d characters", lastNameLength)
+	}
+	return last, nil
+}
+
+const firstNameLength = 50
+
+func validateFirstName(first string) (interface{}, error) {
+	if l := utf8.RuneCountInString(first); l > firstNameLength {
+		return nil, fmt.Errorf("first name must be less than %d characters", firstNameLength)
+	}
+	return first, nil
+}
+
+func IsRecordNotFound(err error) bool {
+	return errors.Is(err, gorm.ErrRecordNotFound)
+}
+
+var (
+	ErrUserNotFound = &NotFoundErr{
+		&appErr{
+			code:  http.StatusNotFound,
+			msg:   "user not found",
+			trace: nil,
+		},
+	}
+)
 
 func BadRequest(msg string) *BadRequestErr {
 	return &BadRequestErr{
