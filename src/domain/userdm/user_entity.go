@@ -1,10 +1,11 @@
 package userdm
 
 import (
+	"errors"
+	"fmt"
 	"unicode/utf8"
 
 	"github.com/takuma123-type/go-api-study/src/domain/shared"
-	"golang.org/x/xerrors"
 )
 
 type User struct {
@@ -17,12 +18,15 @@ type User struct {
 func (u *User) ID() UserID {
 	return u.id
 }
+
 func (u *User) FirstName() string {
 	return u.firstName
 }
+
 func (u *User) LastName() string {
 	return u.lastName
 }
+
 func (u *User) CreatedAt() shared.CreatedAt {
 	return u.createdAt
 }
@@ -34,17 +38,17 @@ var (
 
 func newUser(id UserID, first, last string, createdAt shared.CreatedAt) (*User, error) {
 	if first == "" {
-		return nil, xerrors.New("first name must be not empty")
+		return nil, errors.New("first name must not be empty")
 	}
 	if last == "" {
-		return nil, xerrors.New("last name must be not empty")
+		return nil, errors.New("last name must not be empty")
 	}
 
 	if l := utf8.RuneCountInString(first); l > firstNameLength {
-		return nil, xerrors.Errorf("first name must be less than %d", firstNameLength)
+		return nil, fmt.Errorf("first name must be less than %d characters", firstNameLength)
 	}
 	if l := utf8.RuneCountInString(last); l > lastNameLength {
-		return nil, xerrors.Errorf("last name must be less than %d", lastNameLength)
+		return nil, fmt.Errorf("last name must be less than %d characters", lastNameLength)
 	}
 
 	return &User{
