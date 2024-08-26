@@ -1,6 +1,8 @@
 package router
 
 import (
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/takuma123-type/go-api-study/src/interface/controller"
 	"github.com/takuma123-type/go-api-study/src/interface/database"
@@ -11,8 +13,16 @@ import (
 )
 
 func NewUserRouter(g *gin.Engine) {
-	dsn := "user:password@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
-	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	dsn := "root:password@tcp(db:3306)/golang-db?charset=utf8mb4&parseTime=True&loc=Local"
+	var db *gorm.DB
+	var err error
+	for i := 0; i < 10; i++ {
+		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+		if err == nil {
+			break
+		}
+		time.Sleep(2 * time.Second)
+	}
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -25,6 +35,7 @@ func NewUserRouter(g *gin.Engine) {
 			return
 		}
 	})
+
 	g.GET("/users/:id", func(ctx *gin.Context) {
 		type reqStruct struct {
 			ID string `uri:"id"`
@@ -57,6 +68,5 @@ func NewUserRouter(g *gin.Engine) {
 			ctx.Error(err)
 			return
 		}
-
 	})
 }
