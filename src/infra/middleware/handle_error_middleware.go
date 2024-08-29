@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
@@ -11,23 +10,51 @@ import (
 
 func HandleErrorMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		ctx.Next()
+		// ミドルウェアが呼び出されたことを確認するためのログ
+		log.Println("HandleErrorMiddleware is called")
 
-		err := ctx.Errors.Last()
-		if err != nil {
-			switch e := err.Err.(type) {
-			case smperr.AppError:
-				log.Printf("ERROR: %+v", e.Trace())
-				ctx.AbortWithStatusJSON(e.Code(), gin.H{
-					"message": fmt.Sprintf("%d: %s", e.Code(), e.Msg()),
-				})
-			default:
-				log.Printf("FATAL: %+v", e)
+		defer func() {
+			// パニックが発生した場合のリカバリ処理
+			if r := recover(); r != nil {
+				log.Printf("Recovered from panic: %+v", r)
 				ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-					"message": "Fatal",
+					"message": "Internal Server Error",
 				})
 			}
+		}()
 
+		// 次のミドルウェアまたはハンドラに処理を渡す
+		ctx.Next()
+
+		// エラーチェック
+		if err := ctx.Errors.Last(); err != nil {
+			switch e := err.Err.(type) {
+			case *smperr.BadRequestErr:
+				log.Printf("BadRequest ERROR: %+v", e.Trace())
+				ctx.AbortWithStatusJSON(e.Code(), gin.H{
+					"message": e.Msg(),
+				})
+			case *smperr.InternalErr:
+				log.Printf("Internal ERROR: %+v", e.Trace())
+				ctx.AbortWithStatusJSON(e.Code(), gin.H{
+					"message": e.Msg(),
+				})
+			case *smperr.NotFoundErr:
+				log.Printf("NotFound ERROR: %+v", e.Trace())
+				ctx.AbortWithStatusJSON(e.Code(), gin.H{
+					"message": e.Msg(),
+				})
+			case *smperr.UnauthorizedErr:
+				log.Printf("Unauthorized ERROR: %+v", e.Trace())
+				ctx.AbortWithStatusJSON(e.Code(), gin.H{
+					"message": e.Msg(),
+				})
+			default:
+				log.Printf("Unknown ERROR: %+v", e)
+				ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+					"message": "Internal Server Error",
+				})
+			}
 		}
 	}
 }
