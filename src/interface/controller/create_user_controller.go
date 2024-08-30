@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"context"
+
 	"github.com/gin-gonic/gin"
 	"github.com/takuma123-type/go-api-study/src/domain/userdm"
 	"github.com/takuma123-type/go-api-study/src/interface/presenter"
@@ -20,7 +22,7 @@ func NewUserController(p presenter.UserPresenter, userRepo userdm.UserRepository
 	}
 }
 
-func (c *userController) GetUserList(ctx *gin.Context) error { // error を返す
+func (c *userController) GetUserList(ctx context.Context) error {
 	usecase := userusecase.NewGetUserList(c.userRepo)
 	out, err := usecase.Exec(ctx)
 	if err != nil {
