@@ -57,7 +57,7 @@ func NewUserRouter(g *gin.Engine) {
 			}
 		})
 
-		api.POST("/users", func(ctx *gin.Context) {
+		api.POST("/user", func(ctx *gin.Context) {
 			var in userinput.CreateUserInput
 			if err := ctx.ShouldBindJSON(&in); err != nil {
 				ctx.JSON(400, gin.H{"status": "bad request"})
