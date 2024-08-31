@@ -9,26 +9,22 @@ import (
 )
 
 type User struct {
-	id        UserID
-	firstName string
-	lastName  string
-	createdAt shared.CreatedAt
+	ID        UserID           `gorm:"column:id"`
+	FirstName string           `gorm:"column:first_name"`
+	LastName  string           `gorm:"column:last_name"`
+	CreatedAt shared.CreatedAt `gorm:"column:created_at"`
 }
 
-func (u *User) ID() UserID {
-	return u.id
+func (u *User) GetFirstName() string {
+	return u.FirstName
 }
 
-func (u *User) FirstName() string {
-	return u.firstName
+func (u *User) GetLastName() string {
+	return u.LastName
 }
 
-func (u *User) LastName() string {
-	return u.lastName
-}
-
-func (u *User) CreatedAt() shared.CreatedAt {
-	return u.createdAt
+func (u *User) GetCreatedAt() shared.CreatedAt {
+	return u.CreatedAt
 }
 
 var (
@@ -52,9 +48,9 @@ func newUser(id UserID, first, last string, createdAt shared.CreatedAt) (*User, 
 	}
 
 	return &User{
-		id:        id,
-		firstName: first,
-		lastName:  last,
-		createdAt: createdAt,
+		ID:        id,
+		FirstName: first,
+		LastName:  last,
+		CreatedAt: createdAt,
 	}, nil
 }
