@@ -32,7 +32,7 @@ func (c *userController) GetUserList(ctx context.Context) error {
 	return nil
 }
 
-func (c *userController) GetUserByID(ctx *gin.Context, in *userinput.GetUserByIDInput) error { // error を返す
+func (c *userController) GetUserByID(ctx context.Context, in *userinput.GetUserByIDInput) error {
 	usecase := userusecase.NewGetUserByID(c.userRepo)
 	out, err := usecase.Exec(ctx, in)
 	if err != nil {
@@ -42,7 +42,7 @@ func (c *userController) GetUserByID(ctx *gin.Context, in *userinput.GetUserByID
 	return nil
 }
 
-func (c *userController) CreateUser(ctx *gin.Context, in *userinput.CreateUserInput) error { // error を返す
+func (c *userController) CreateUser(ctx context.Context, in *userinput.CreateUserInput) error {
 	usecase := userusecase.NewCreateUser(c.userRepo)
 	out, err := usecase.Exec(ctx, in)
 	if err != nil {
@@ -50,4 +50,27 @@ func (c *userController) CreateUser(ctx *gin.Context, in *userinput.CreateUserIn
 	}
 	c.delivery.Create(out)
 	return nil
+}
+
+// gin.HandlerFuncとして使用する場合のラッパー関数
+func (c *userController) GetUserByIDHandler(ctx *gin.Context) {
+	in := &userinput.GetUserByIDInput{
+		ID: ctx.Param("id"),
+	}
+	err := c.GetUserByID(ctx.Request.Context(), in)
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+	}
+}
+
+func (c *userController) CreateUserHandler(ctx *gin.Context) {
+	var in userinput.CreateUserInput
+	if err := ctx.ShouldBindJSON(&in); err != nil {
+		ctx.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	err := c.CreateUser(ctx.Request.Context(), &in)
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+	}
 }
