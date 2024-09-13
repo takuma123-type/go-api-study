@@ -30,9 +30,9 @@ func (use *CreateUserUsecase) Exec(ctx context.Context, in *userinput.CreateUser
 	}
 
 	return &useroutput.CreateUserOutput{
-		ID:        user.ID().String(),
-		FirstName: user.FirstName(),
-		LastName:  user.LastName(),
-		CreatedAt: user.CreatedAt().Value(),
+		ID:        user.ID.String(),
+		FirstName: user.GetFirstName(),
+		LastName:  user.GetLastName(),
+		CreatedAt: user.GetCreatedAt().Value(),
 	}, nil
 }

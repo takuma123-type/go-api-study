@@ -45,9 +45,9 @@ func TestNewUser(t *testing.T) {
 				assert.Error(t, err)
 			} else {
 				assert.NoError(t, err)
-				assert.Equal(t, userID, user.ID())
-				assert.Equal(t, tt.firstName, user.FirstName())
-				assert.Equal(t, tt.lastName, user.LastName())
+				assert.Equal(t, userID, user.ID)
+				assert.Equal(t, tt.firstName, user.FirstName)
+				assert.Equal(t, tt.lastName, user.LastName)
 			}
 		})
 	}

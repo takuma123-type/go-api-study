@@ -28,8 +28,8 @@ func (use *GetUserByIDUsecase) Exec(ctx context.Context, in *userinput.GetUserBy
 		return nil, err
 	}
 	return &useroutput.UserByID{
-		ID:        user.ID().String(),
-		FirstName: user.FirstName(),
-		LastName:  user.LastName(),
+		ID:        user.ID.String(),
+		FirstName: user.GetFirstName(),
+		LastName:  user.GetLastName(),
 	}, nil
 }

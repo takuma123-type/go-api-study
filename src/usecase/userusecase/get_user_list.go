@@ -26,9 +26,9 @@ func (use *GetUserListUsecase) Exec(ctx context.Context) (*useroutput.UserList, 
 	userItems := make([]*useroutput.UserItem, len(users))
 	for i, user := range users {
 		userItems[i] = &useroutput.UserItem{
-			ID:        user.ID().String(),
-			FirstName: user.FirstName(),
-			LastName:  user.LastName(),
+			ID:        user.ID.String(),
+			FirstName: user.GetFirstName(),
+			LastName:  user.GetLastName(),
 		}
 	}
 	return &useroutput.UserList{Users: userItems}, nil

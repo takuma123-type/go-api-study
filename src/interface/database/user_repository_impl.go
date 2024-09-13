@@ -1,20 +1,17 @@
-// src/interface/database/user_repository_impl.go
 package database
 
 import (
 	"context"
+	"log"
 
 	"github.com/takuma123-type/go-api-study/src/domain/userdm"
-	"github.com/takuma123-type/go-api-study/src/support/smperr"
 	"gorm.io/gorm"
 )
 
-// userRepositoryImpl は private 構造体として定義
 type userRepositoryImpl struct {
 	db *gorm.DB
 }
 
-// NewUserRepositoryImpl は public にして外部からインスタンスを生成できるようにする
 func NewUserRepositoryImpl(db *gorm.DB) *userRepositoryImpl {
 	return &userRepositoryImpl{
 		db: db,
@@ -32,16 +29,21 @@ func (repo *userRepositoryImpl) FindAll(ctx context.Context) ([]*userdm.User, er
 func (repo *userRepositoryImpl) FindByID(ctx context.Context, id userdm.UserID) (*userdm.User, error) {
 	var user userdm.User
 	if err := repo.db.WithContext(ctx).Where("id = ?", id.String()).First(&user).Error; err != nil {
-		if smperr.IsRecordNotFound(err) {
-			return nil, smperr.ErrUserNotFound
-		}
 		return nil, err
 	}
 	return &user, nil
 }
 
 func (repo *userRepositoryImpl) Store(ctx context.Context, user *userdm.User) error {
-	if err := repo.db.WithContext(ctx).Create(user).Error; err != nil {
+	log.Printf("Storing user: %+v", user)
+
+	createdAt := user.CreatedAt.Value()
+
+	if err := repo.db.WithContext(ctx).Exec(`
+		INSERT INTO users (id, first_name, last_name, created_at) 
+		VALUES (?, ?, ?, ?)`,
+		user.ID.String(), user.FirstName, user.LastName, createdAt).Error; err != nil {
+		log.Printf("Failed to store user: %v", err)
 		return err
 	}
 	return nil
