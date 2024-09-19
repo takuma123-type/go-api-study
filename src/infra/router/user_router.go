@@ -1,35 +1,23 @@
 package router
 
 import (
-	"time"
-
 	"github.com/gin-gonic/gin"
 	"github.com/takuma123-type/go-api-study/src/interface/controller"
 	"github.com/takuma123-type/go-api-study/src/interface/database"
 	"github.com/takuma123-type/go-api-study/src/interface/presenter"
 	"github.com/takuma123-type/go-api-study/src/usecase/userusecase/userinput"
-	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 func NewUserRouter(g *gin.Engine) {
-	dsn := "root:password@tcp(db:3306)/golang-db?charset=utf8mb4&parseTime=True&loc=Local"
-	var db *gorm.DB
-	var err error
-	for i := 0; i < 10; i++ {
-		db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-		if err == nil {
-			break
-		}
-		time.Sleep(2 * time.Second)
-	}
-	if err != nil {
-		panic("failed to connect database")
-	}
+	// DB接続の宣言と初期化部分は不要
+	// DSNの設定はミドルウェアなどで扱うべきです
 
 	api := g.Group("/api")
 	{
 		api.GET("/users", func(ctx *gin.Context) {
+			// コンテキストからトランザクション対応のDBを取得
+			db := ctx.MustGet("db").(*gorm.DB)
 			userRepoImpl := database.NewUserRepositoryImpl(db)
 			err := controller.NewUserController(presenter.NewUserPresenter(ctx), userRepoImpl).GetUserList(ctx)
 			if err != nil {
@@ -49,6 +37,7 @@ func NewUserRouter(g *gin.Engine) {
 			}
 
 			in := userinput.GetUserByIDInput{ID: req.ID}
+			db := ctx.MustGet("db").(*gorm.DB)
 			userRepoImpl := database.NewUserRepositoryImpl(db)
 			err := controller.NewUserController(presenter.NewUserPresenter(ctx), userRepoImpl).GetUserByID(ctx, &in)
 			if err != nil {
@@ -64,6 +53,7 @@ func NewUserRouter(g *gin.Engine) {
 				return
 			}
 
+			db := ctx.MustGet("db").(*gorm.DB)
 			userRepoImpl := database.NewUserRepositoryImpl(db)
 			err := controller.NewUserController(presenter.NewUserPresenter(ctx), userRepoImpl).CreateUser(ctx, &in)
 			if err != nil {
