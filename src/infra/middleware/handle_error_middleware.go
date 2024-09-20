@@ -10,11 +10,9 @@ import (
 
 func HandleErrorMiddleware() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		// ミドルウェアが呼び出されたことを確認するためのログ
 		log.Println("HandleErrorMiddleware is called")
 
 		defer func() {
-			// パニックが発生した場合のリカバリ処理
 			if r := recover(); r != nil {
 				log.Printf("Recovered from panic: %+v", r)
 				ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
@@ -23,10 +21,8 @@ func HandleErrorMiddleware() gin.HandlerFunc {
 			}
 		}()
 
-		// 次のミドルウェアまたはハンドラに処理を渡す
 		ctx.Next()
 
-		// エラーチェック
 		if err := ctx.Errors.Last(); err != nil {
 			switch e := err.Err.(type) {
 			case *smperr.BadRequestErr:
