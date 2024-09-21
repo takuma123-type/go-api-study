@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -77,12 +78,24 @@ func (c *userController) GetUserByIDHandler(ctx *gin.Context) {
 
 func (c *userController) CreateUserHandler(ctx *gin.Context) {
 	var in userinput.CreateUserInput
+
+	// リクエストボディのバインディング
 	if err := ctx.ShouldBindJSON(&in); err != nil {
+		log.Printf("Error binding JSON: %v", err)
 		ctx.JSON(400, gin.H{"error": err.Error()})
 		return
 	}
+
+	// 正しくバインディングされたかどうかを確認
+	log.Printf("Received input: %+v", in)
+
+	// ユーザー作成処理
 	err := c.CreateUser(ctx.Request.Context(), &in)
 	if err != nil {
+		log.Printf("Error creating user: %v", err)
 		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
 	}
+
+	ctx.JSON(http.StatusOK, gin.H{"status": "User created successfully"})
 }
