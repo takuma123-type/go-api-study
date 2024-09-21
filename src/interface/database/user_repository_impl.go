@@ -34,6 +34,10 @@ func (repo *userRepositoryImpl) FindByID(ctx context.Context, id userdm.UserID) 
 	return &user, nil
 }
 
+func (repo *userRepositoryImpl) Update(ctx context.Context, user *userdm.User) error {
+	return repo.db.WithContext(ctx).Save(user).Error
+}
+
 func (repo *userRepositoryImpl) Store(ctx context.Context, user *userdm.User) error {
 	log.Printf("Storing user: %+v", user)
 

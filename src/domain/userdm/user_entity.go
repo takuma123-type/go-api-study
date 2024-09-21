@@ -3,6 +3,7 @@ package userdm
 import (
 	"errors"
 	"fmt"
+	"time"
 	"unicode/utf8"
 
 	"github.com/takuma123-type/go-api-study/src/domain/shared"
@@ -13,6 +14,7 @@ type User struct {
 	FirstName string           `gorm:"column:first_name"`
 	LastName  string           `gorm:"column:last_name"`
 	CreatedAt shared.CreatedAt `gorm:"column:created_at"`
+	UpdatedAt time.Time        `gorm:"column:updated_at"`
 }
 
 func (u *User) GetFirstName() string {
@@ -25,6 +27,16 @@ func (u *User) GetLastName() string {
 
 func (u *User) GetCreatedAt() shared.CreatedAt {
 	return u.CreatedAt
+}
+
+func (u *User) GetUpdatedAt() time.Time {
+	return u.UpdatedAt
+}
+
+func (u *User) Update(firstName, lastName string) {
+	u.FirstName = firstName
+	u.LastName = lastName
+	u.UpdatedAt = time.Now()
 }
 
 var (
@@ -52,5 +64,6 @@ func newUser(id UserID, first, last string, createdAt shared.CreatedAt) (*User, 
 		FirstName: first,
 		LastName:  last,
 		CreatedAt: createdAt,
+		UpdatedAt: time.Now(),
 	}, nil
 }

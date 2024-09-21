@@ -66,7 +66,34 @@ func NewUserRouter(g *gin.Engine) {
 			}
 
 			userRepoImpl := database.NewUserRepositoryImpl(db)
-			err = controller.NewUserController(presenter.NewUserPresenter(ctx), userRepoImpl).CreateUser(ctx, &in)
+			controller.NewUserController(presenter.NewUserPresenter(ctx), userRepoImpl).CreateUserHandler(ctx)
+		})
+
+		api.PUT("/user/:id", func(ctx *gin.Context) {
+			db, err := rdb.GetDBFromContext(ctx)
+			if err != nil {
+				ctx.JSON(500, gin.H{"message": err.Error()})
+				return
+			}
+
+			type reqStruct struct {
+				ID string `uri:"id"`
+			}
+			var req reqStruct
+			if err := ctx.ShouldBindUri(&req); err != nil {
+				ctx.JSON(400, gin.H{"status": "bad request"})
+				return
+			}
+
+			var in userinput.UpdateUserInput
+			if err := ctx.ShouldBindJSON(&in); err != nil {
+				ctx.JSON(400, gin.H{"status": "bad request"})
+				return
+			}
+			in.ID = req.ID
+
+			userRepoImpl := database.NewUserRepositoryImpl(db)
+			err = controller.NewUserController(presenter.NewUserPresenter(ctx), userRepoImpl).UpdateUser(ctx, &in)
 			if err != nil {
 				ctx.Error(err)
 				return
