@@ -48,3 +48,16 @@ func (repo *userRepositoryImpl) Store(ctx context.Context, user *userdm.User) er
 	}
 	return nil
 }
+
+func (repo *userRepositoryImpl) Update(ctx context.Context, user *userdm.User) error {
+	log.Printf("Updating user: %+v", user)
+
+	if err := repo.db.WithContext(ctx).Model(&user).Updates(map[string]interface{}{
+		"first_name": user.FirstName,
+		"last_name":  user.LastName,
+	}).Error; err != nil {
+		log.Printf("Failed to update user: %v", err)
+		return err
+	}
+	return nil
+}

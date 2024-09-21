@@ -54,3 +54,24 @@ func newUser(id UserID, first, last string, createdAt shared.CreatedAt) (*User, 
 		CreatedAt: createdAt,
 	}, nil
 }
+
+func (u *User) UpdateUser(first, last string) error {
+	if first == "" {
+		return errors.New("first name must not be empty")
+	}
+	if last == "" {
+		return errors.New("last name must not be empty")
+	}
+
+	if l := utf8.RuneCountInString(first); l > firstNameLength {
+		return fmt.Errorf("first name must be less than %d characters", firstNameLength)
+	}
+	if l := utf8.RuneCountInString(last); l > lastNameLength {
+		return fmt.Errorf("last name must be less than %d characters", lastNameLength)
+	}
+
+	u.FirstName = first
+	u.LastName = last
+
+	return nil
+}

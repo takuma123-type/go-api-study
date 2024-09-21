@@ -74,3 +74,27 @@ func (c *userController) CreateUserHandler(ctx *gin.Context) {
 		ctx.JSON(500, gin.H{"error": err.Error()})
 	}
 }
+
+func (c *userController) UpdateUser(ctx context.Context, in *userinput.UpdateUserInput) error {
+	usecase := userusecase.NewUpdateUser(c.userRepo)
+	out, err := usecase.Exec(ctx, in)
+	if err != nil {
+		return err
+	}
+	c.delivery.Update(out)
+	return nil
+}
+
+// gin.HandlerFuncとして使用する場合のラッパー関数
+func (c *userController) UpdateUserHandler(ctx *gin.Context) {
+	var in userinput.UpdateUserInput
+	if err := ctx.ShouldBindJSON(&in); err != nil {
+		ctx.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	in.ID = ctx.Param("id") // パスパラメータからIDを取得
+	err := c.UpdateUser(ctx.Request.Context(), &in)
+	if err != nil {
+		ctx.JSON(500, gin.H{"error": err.Error()})
+	}
+}
