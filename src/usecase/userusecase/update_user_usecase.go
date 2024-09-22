@@ -1,4 +1,3 @@
-// src/usecase/userusecase/update_user_usecase.go
 package userusecase
 
 import (
