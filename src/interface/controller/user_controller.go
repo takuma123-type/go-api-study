@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/takuma123-type/go-api-study/src/domain/userdm"
 	"github.com/takuma123-type/go-api-study/src/interface/presenter"
+	"github.com/takuma123-type/go-api-study/src/support/smperr"
 	"github.com/takuma123-type/go-api-study/src/usecase/userusecase"
 	"github.com/takuma123-type/go-api-study/src/usecase/userusecase/userinput"
 )
@@ -52,7 +53,6 @@ func (c *userController) CreateUser(ctx context.Context, in *userinput.CreateUse
 	return nil
 }
 
-// gin.HandlerFuncとして使用する場合のラッパー関数
 func (c *userController) GetUserByIDHandler(ctx *gin.Context) {
 	in := &userinput.GetUserByIDInput{
 		ID: ctx.Param("id"),
@@ -79,22 +79,23 @@ func (c *userController) UpdateUser(ctx context.Context, in *userinput.UpdateUse
 	usecase := userusecase.NewUpdateUser(c.userRepo)
 	out, err := usecase.Exec(ctx, in)
 	if err != nil {
-		return err
+		return &smperr.UpdateUserError{Reason: err.Error()}
 	}
 	c.delivery.Update(out)
 	return nil
 }
 
-// gin.HandlerFuncとして使用する場合のラッパー関数
 func (c *userController) UpdateUserHandler(ctx *gin.Context) {
 	var in userinput.UpdateUserInput
 	if err := ctx.ShouldBindJSON(&in); err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, gin.H{"error": (&smperr.JSONBindingError{Detail: err.Error()}).Error()})
 		return
 	}
-	in.ID = ctx.Param("id") // パスパラメータからIDを取得
-	err := c.UpdateUser(ctx.Request.Context(), &in)
-	if err != nil {
+	in.ID = ctx.Param("id")
+	if err := c.UpdateUser(ctx.Request.Context(), &in); err != nil {
 		ctx.JSON(500, gin.H{"error": err.Error()})
+		return
 	}
+
+	ctx.JSON(200, gin.H{"message": "User updated successfully"})
 }

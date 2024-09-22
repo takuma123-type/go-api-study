@@ -223,3 +223,70 @@ func UnauthorizedWrapf(err2 error, format string, msg ...any) *UnauthorizedErr {
 		},
 	}
 }
+
+type UserNotFoundError struct {
+	ID string
+}
+
+func (e *UserNotFoundError) Error() string {
+	return fmt.Sprintf("User with ID %s not found", e.ID)
+}
+
+// UpdateFailedError is returned when updating the user fails.
+type UpdateFailedError struct {
+	Reason string
+}
+
+func (e *UpdateFailedError) Error() string {
+	return fmt.Sprintf("Failed to update user: %s", e.Reason)
+}
+
+// DatabaseError represents a generic database operation failure.
+type DatabaseError struct {
+	Operation string
+	Err       error
+}
+
+func (e *DatabaseError) Error() string {
+	return fmt.Sprintf("Database operation '%s' failed: %v", e.Operation, e.Err)
+}
+
+type JSONBindingError struct {
+	Detail string
+}
+
+func (e *JSONBindingError) Error() string {
+	return fmt.Sprintf("Failed to bind JSON: %s", e.Detail)
+}
+
+type UpdateUserError struct {
+	Reason string
+}
+
+func (e *UpdateUserError) Error() string {
+	return fmt.Sprintf("Failed to update user: %s", e.Reason)
+}
+
+type InvalidURIError struct {
+	Detail string
+}
+
+func (e *InvalidURIError) Error() string {
+	return fmt.Sprintf("Invalid URI: %s", e.Detail)
+}
+
+type InvalidJSONError struct {
+	Detail string
+}
+
+func (e *InvalidJSONError) Error() string {
+	return fmt.Sprintf("Invalid JSON: %s", e.Detail)
+}
+
+type DatabaseConnectionError struct {
+	Reason string
+}
+
+func (e *DatabaseConnectionError) Error() string {
+	return fmt.Sprintf("Failed to connect to the database: %s", e.Reason)
+}

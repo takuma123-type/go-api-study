@@ -6,6 +6,7 @@ import (
 	"github.com/takuma123-type/go-api-study/src/interface/controller"
 	"github.com/takuma123-type/go-api-study/src/interface/database"
 	"github.com/takuma123-type/go-api-study/src/interface/presenter"
+	"github.com/takuma123-type/go-api-study/src/support/smperr"
 	"github.com/takuma123-type/go-api-study/src/usecase/userusecase/userinput"
 )
 
@@ -15,14 +16,14 @@ func NewUserRouter(g *gin.Engine) {
 		api.GET("/users", func(ctx *gin.Context) {
 			db, err := rdb.GetDBFromContext(ctx)
 			if err != nil {
-				ctx.JSON(500, gin.H{"message": err.Error()})
+				ctx.JSON(500, gin.H{"message": (&smperr.DatabaseConnectionError{Reason: err.Error()}).Error()})
 				return
 			}
 
 			userRepoImpl := database.NewUserRepositoryImpl(db)
 			err = controller.NewUserController(presenter.NewUserPresenter(ctx), userRepoImpl).GetUserList(ctx)
 			if err != nil {
-				ctx.Error(err)
+				ctx.JSON(500, gin.H{"error": err.Error()})
 				return
 			}
 		})
@@ -30,7 +31,7 @@ func NewUserRouter(g *gin.Engine) {
 		api.GET("/users/:id", func(ctx *gin.Context) {
 			db, err := rdb.GetDBFromContext(ctx)
 			if err != nil {
-				ctx.JSON(500, gin.H{"message": err.Error()})
+				ctx.JSON(500, gin.H{"message": (&smperr.DatabaseConnectionError{Reason: err.Error()}).Error()})
 				return
 			}
 
@@ -39,7 +40,7 @@ func NewUserRouter(g *gin.Engine) {
 			}
 			var req reqStruct
 			if err := ctx.ShouldBindUri(&req); err != nil {
-				ctx.JSON(400, gin.H{"status": "bad request"})
+				ctx.JSON(400, gin.H{"message": (&smperr.InvalidURIError{Detail: err.Error()}).Error()})
 				return
 			}
 
@@ -47,7 +48,7 @@ func NewUserRouter(g *gin.Engine) {
 			userRepoImpl := database.NewUserRepositoryImpl(db)
 			err = controller.NewUserController(presenter.NewUserPresenter(ctx), userRepoImpl).GetUserByID(ctx, &in)
 			if err != nil {
-				ctx.Error(err)
+				ctx.JSON(500, gin.H{"error": err.Error()})
 				return
 			}
 		})
@@ -55,20 +56,20 @@ func NewUserRouter(g *gin.Engine) {
 		api.POST("/user", func(ctx *gin.Context) {
 			db, err := rdb.GetDBFromContext(ctx)
 			if err != nil {
-				ctx.JSON(500, gin.H{"message": err.Error()})
+				ctx.JSON(500, gin.H{"message": (&smperr.DatabaseConnectionError{Reason: err.Error()}).Error()})
 				return
 			}
 
 			var in userinput.CreateUserInput
 			if err := ctx.ShouldBindJSON(&in); err != nil {
-				ctx.JSON(400, gin.H{"status": "bad request"})
+				ctx.JSON(400, gin.H{"message": (&smperr.InvalidJSONError{Detail: err.Error()}).Error()})
 				return
 			}
 
 			userRepoImpl := database.NewUserRepositoryImpl(db)
 			err = controller.NewUserController(presenter.NewUserPresenter(ctx), userRepoImpl).CreateUser(ctx, &in)
 			if err != nil {
-				ctx.Error(err)
+				ctx.JSON(500, gin.H{"error": err.Error()})
 				return
 			}
 		})
@@ -76,14 +77,14 @@ func NewUserRouter(g *gin.Engine) {
 		api.PUT("/user/:id", func(ctx *gin.Context) {
 			db, err := rdb.GetDBFromContext(ctx)
 			if err != nil {
-				ctx.JSON(500, gin.H{"message": err.Error()})
+				ctx.JSON(500, gin.H{"message": (&smperr.DatabaseConnectionError{Reason: err.Error()}).Error()})
 				return
 			}
 			id := ctx.Param("id")
 
 			var in userinput.UpdateUserInput
 			if err := ctx.ShouldBindJSON(&in); err != nil {
-				ctx.JSON(400, gin.H{"status": "bad request"})
+				ctx.JSON(400, gin.H{"message": (&smperr.InvalidJSONError{Detail: err.Error()}).Error()})
 				return
 			}
 
@@ -92,7 +93,7 @@ func NewUserRouter(g *gin.Engine) {
 			userRepoImpl := database.NewUserRepositoryImpl(db)
 			err = controller.NewUserController(presenter.NewUserPresenter(ctx), userRepoImpl).UpdateUser(ctx, &in)
 			if err != nil {
-				ctx.Error(err)
+				ctx.JSON(500, gin.H{"error": err.Error()})
 				return
 			}
 		})

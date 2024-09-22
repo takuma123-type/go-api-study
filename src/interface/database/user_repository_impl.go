@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/takuma123-type/go-api-study/src/domain/userdm"
+	"github.com/takuma123-type/go-api-study/src/support/smperr"
 	"gorm.io/gorm"
 )
 
@@ -57,7 +58,10 @@ func (repo *userRepositoryImpl) Update(ctx context.Context, user *userdm.User) e
 		"last_name":  user.LastName,
 	}).Error; err != nil {
 		log.Printf("Failed to update user: %v", err)
-		return err
+		return &smperr.DatabaseError{
+			Operation: "update user",
+			Err:       err,
+		}
 	}
 	return nil
 }
