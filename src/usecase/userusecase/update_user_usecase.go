@@ -22,15 +22,18 @@ func NewUpdateUser(userRepo userdm.UserRepository) *UpdateUserUsecase {
 func (use *UpdateUserUsecase) Exec(ctx context.Context, in *userinput.UpdateUserInput) (*useroutput.UpdateUserOutput, error) {
 	user, err := use.userRepository.FindByID(ctx, userdm.UserID(in.ID))
 	if err != nil {
-		return nil, &smperr.UserNotFoundError{ID: in.ID}
+		if smperr.IsRecordNotFound(err) {
+			return nil, smperr.NotFound("User not found")
+		}
+		return nil, smperr.Internal("Failed to retrieve user")
 	}
 
 	if err := user.UpdateUser(in.FirstName, in.LastName); err != nil {
-		return nil, &smperr.UpdateFailedError{Reason: err.Error()}
+		return nil, smperr.BadRequest("Invalid input data for user update")
 	}
 
 	if err := use.userRepository.Update(ctx, user); err != nil {
-		return nil, &smperr.UpdateFailedError{Reason: err.Error()}
+		return nil, smperr.Internal("Failed to update user")
 	}
 
 	return &useroutput.UpdateUserOutput{

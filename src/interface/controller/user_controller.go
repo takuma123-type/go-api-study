@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/takuma123-type/go-api-study/src/domain/userdm"
@@ -79,7 +80,7 @@ func (c *userController) UpdateUser(ctx context.Context, in *userinput.UpdateUse
 	usecase := userusecase.NewUpdateUser(c.userRepo)
 	out, err := usecase.Exec(ctx, in)
 	if err != nil {
-		return &smperr.UpdateUserError{Reason: err.Error()}
+		return err
 	}
 	c.delivery.Update(out)
 	return nil
@@ -88,14 +89,21 @@ func (c *userController) UpdateUser(ctx context.Context, in *userinput.UpdateUse
 func (c *userController) UpdateUserHandler(ctx *gin.Context) {
 	var in userinput.UpdateUserInput
 	if err := ctx.ShouldBindJSON(&in); err != nil {
-		ctx.JSON(400, gin.H{"error": (&smperr.JSONBindingError{Detail: err.Error()}).Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": smperr.BadRequest("Invalid JSON input").Error()})
 		return
 	}
 	in.ID = ctx.Param("id")
 	if err := c.UpdateUser(ctx.Request.Context(), &in); err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+		switch e := err.(type) {
+		case *smperr.NotFoundErr:
+			ctx.JSON(http.StatusNotFound, gin.H{"error": e.Error()})
+		case *smperr.BadRequestErr:
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": e.Error()})
+		default:
+			ctx.JSON(http.StatusInternalServerError, gin.H{"error": e.Error()})
+		}
 		return
 	}
 
-	ctx.JSON(200, gin.H{"message": "User updated successfully"})
+	ctx.JSON(http.StatusOK, gin.H{"message": "User updated successfully"})
 }
