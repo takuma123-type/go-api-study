@@ -52,3 +52,59 @@ func TestNewUser(t *testing.T) {
 		})
 	}
 }
+
+func TestUpdateUser(t *testing.T) {
+	tests := []struct {
+		name         string
+		firstName    string
+		lastName     string
+		newFirstName string
+		newLastName  string
+		expectErr    bool
+	}{
+		{
+			name:         "Valid user update",
+			firstName:    "John",
+			lastName:     "Doe",
+			newFirstName: "Jane",
+			newLastName:  "Smith",
+			expectErr:    false,
+		},
+		{
+			name:         "Empty new first name",
+			firstName:    "John",
+			lastName:     "Doe",
+			newFirstName: "",
+			newLastName:  "Smith",
+			expectErr:    true,
+		},
+		{
+			name:         "Empty new last name",
+			firstName:    "John",
+			lastName:     "Doe",
+			newFirstName: "Jane",
+			newLastName:  "",
+			expectErr:    true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			userID := NewUserID()
+			createdAt := shared.NewCreatedAt()
+
+			user, err := newUser(userID, tt.firstName, tt.lastName, createdAt)
+			assert.NoError(t, err)
+
+			err = user.UpdateUser(tt.newFirstName, tt.newLastName)
+
+			if tt.expectErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.newFirstName, user.FirstName)
+				assert.Equal(t, tt.newLastName, user.LastName)
+			}
+		})
+	}
+}

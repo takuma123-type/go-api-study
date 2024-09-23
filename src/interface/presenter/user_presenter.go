@@ -20,6 +20,7 @@ type UserPresenter interface {
 	UserList(out *useroutput.UserList)
 	UserByID(out *useroutput.UserByID)
 	Create(out *useroutput.CreateUserOutput)
+	Update(out *useroutput.UpdateUserOutput)
 }
 
 func (p *userPresent) UserList(out *useroutput.UserList) {
@@ -31,4 +32,8 @@ func (p *userPresent) UserByID(out *useroutput.UserByID) {
 }
 func (p *userPresent) Create(out *useroutput.CreateUserOutput) {
 	p.delivery.JSON(http.StatusCreated, out)
+}
+
+func (p *userPresent) Update(out *useroutput.UpdateUserOutput) {
+	p.delivery.JSON(http.StatusOK, out)
 }

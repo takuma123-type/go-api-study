@@ -15,9 +15,7 @@ func HandleErrorMiddleware() gin.HandlerFunc {
 		defer func() {
 			if r := recover(); r != nil {
 				log.Printf("Recovered from panic: %+v", r)
-				ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-					"message": "Internal Server Error",
-				})
+				smperr.HandleError(ctx, smperr.Internal("Internal Server Error"), http.StatusInternalServerError)
 			}
 		}()
 
@@ -27,29 +25,16 @@ func HandleErrorMiddleware() gin.HandlerFunc {
 			switch e := err.Err.(type) {
 			case *smperr.BadRequestErr:
 				log.Printf("BadRequest ERROR: %+v", e.Trace())
-				ctx.AbortWithStatusJSON(e.Code(), gin.H{
-					"message": e.Msg(),
-				})
+				smperr.HandleError(ctx, e, e.Code())
 			case *smperr.InternalErr:
 				log.Printf("Internal ERROR: %+v", e.Trace())
-				ctx.AbortWithStatusJSON(e.Code(), gin.H{
-					"message": e.Msg(),
-				})
+				smperr.HandleError(ctx, e, e.Code())
 			case *smperr.NotFoundErr:
 				log.Printf("NotFound ERROR: %+v", e.Trace())
-				ctx.AbortWithStatusJSON(e.Code(), gin.H{
-					"message": e.Msg(),
-				})
-			case *smperr.UnauthorizedErr:
-				log.Printf("Unauthorized ERROR: %+v", e.Trace())
-				ctx.AbortWithStatusJSON(e.Code(), gin.H{
-					"message": e.Msg(),
-				})
+				smperr.HandleError(ctx, e, e.Code())
 			default:
 				log.Printf("Unknown ERROR: %+v", e)
-				ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-					"message": "Internal Server Error",
-				})
+				smperr.HandleError(ctx, smperr.Internal("Internal Server Error"), http.StatusInternalServerError)
 			}
 		}
 	}

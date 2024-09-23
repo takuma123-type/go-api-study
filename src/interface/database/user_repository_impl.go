@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/takuma123-type/go-api-study/src/domain/userdm"
+	"github.com/takuma123-type/go-api-study/src/support/smperr"
 	"gorm.io/gorm"
 )
 
@@ -45,6 +46,22 @@ func (repo *userRepositoryImpl) Store(ctx context.Context, user *userdm.User) er
 		user.ID.String(), user.FirstName, user.LastName, createdAt).Error; err != nil {
 		log.Printf("Failed to store user: %v", err)
 		return err
+	}
+	return nil
+}
+
+func (repo *userRepositoryImpl) Update(ctx context.Context, user *userdm.User) error {
+	log.Printf("Updating user: %+v", user)
+
+	if err := repo.db.WithContext(ctx).Model(&user).Updates(map[string]interface{}{
+		"first_name": user.FirstName,
+		"last_name":  user.LastName,
+	}).Error; err != nil {
+		log.Printf("Failed to update user: %v", err)
+		return &smperr.DatabaseError{
+			Operation: "update user",
+			Err:       err,
+		}
 	}
 	return nil
 }
