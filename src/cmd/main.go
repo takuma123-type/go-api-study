@@ -21,5 +21,6 @@ func main() {
 	g.Use(middleware.DBTransactionMiddleware(db))
 	g.Use(middleware.HandleErrorMiddleware())
 	router.NewUserRouter(g)
+	router.NewMentorRouter(g)
 	log.Fatal(g.Run(":9090"))
 }
