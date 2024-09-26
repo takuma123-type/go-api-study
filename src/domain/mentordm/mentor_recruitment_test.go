@@ -85,9 +85,9 @@ func TestNewMentorRecruitment(t *testing.T) {
 				assert.Error(t, err)
 			} else {
 				assert.NoError(t, err)
-				assert.Equal(t, mentorRecruitmentID, mentorRecruitment.ID)
-				assert.Equal(t, tt.title, mentorRecruitment.Title)
-				assert.Equal(t, tt.description, mentorRecruitment.Description)
+				assert.Equal(t, mentorRecruitmentID, mentorRecruitment.GetID())
+				assert.Equal(t, tt.title, mentorRecruitment.GetTitle())
+				assert.Equal(t, tt.description, mentorRecruitment.GetDescription())
 			}
 		})
 	}

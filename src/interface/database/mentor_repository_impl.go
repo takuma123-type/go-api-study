@@ -42,18 +42,15 @@ func (repo *mentorRecruitmentRepositoryImpl) Store(ctx context.Context, mentorRe
 	log.Printf("Storing mentor recruitment: %+v", mentorRecruitment)
 
 	if err := repo.db.WithContext(ctx).Exec(`
-		INSERT INTO mentor_recruitments 
-		(id, user_id, title, category, consultation_format, consultation_method, description, budget, period, status, created_at) 
-		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-		mentorRecruitment.ID.String(), mentorRecruitment.UserID, mentorRecruitment.Title, mentorRecruitment.Category,
-		mentorRecruitment.ConsultationFormat, mentorRecruitment.ConsultationMethod, mentorRecruitment.Description,
-		mentorRecruitment.Budget, mentorRecruitment.Period, mentorRecruitment.Status, mentorRecruitment.CreatedAt.Value(),
+        INSERT INTO mentor_recruitments 
+        (id, user_id, title, category, consultation_format, consultation_method, description, budget, period, status, created_at) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		mentorRecruitment.GetID().String(), mentorRecruitment.GetUserID(), mentorRecruitment.GetTitle(), mentorRecruitment.GetCategory(),
+		mentorRecruitment.GetConsultationFormat(), mentorRecruitment.GetConsultationMethod(), mentorRecruitment.GetDescription(),
+		mentorRecruitment.GetBudget(), mentorRecruitment.GetPeriod(), mentorRecruitment.GetStatus(), mentorRecruitment.GetCreatedAt().Value(),
 	).Error; err != nil {
 		log.Printf("Failed to store mentor recruitment: %v", err)
-		return &smperr.DatabaseError{
-			Operation: "store mentor recruitment",
-			Err:       err,
-		}
+		return smperr.Internal("store mentor recruitment")
 	}
 	return nil
 }

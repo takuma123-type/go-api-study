@@ -9,36 +9,28 @@ import (
 )
 
 type MentorRecruitment struct {
-	ID                 MentorRecruitmentID `gorm:"column:id"`
-	UserID             string              `gorm:"column:user_id"`
-	Title              string              `gorm:"column:title"`
-	Category           int                 `gorm:"column:category"`
-	ConsultationFormat int                 `gorm:"column:consultation_format"`
-	ConsultationMethod int                 `gorm:"column:consultation_method"`
-	Description        string              `gorm:"column:description"`
-	Budget             int                 `gorm:"column:budget"`
-	Period             int                 `gorm:"column:period"`
-	Status             int                 `gorm:"column:status"`
-	CreatedAt          shared.CreatedAt    `gorm:"column:created_at"`
-	UpdatedAt          shared.CreatedAt    `gorm:"column:updated_at"`
-}
-
-func (m *MentorRecruitment) GetTitle() string {
-	return m.Title
-}
-
-func (m *MentorRecruitment) GetDescription() string {
-	return m.Description
-}
-
-func (m *MentorRecruitment) GetCreatedAt() shared.CreatedAt {
-	return m.CreatedAt
+	id                 MentorRecruitmentID
+	userID             string
+	title              string
+	category           int
+	consultationFormat int
+	consultationMethod int
+	description        string
+	budget             int
+	period             int
+	status             int
+	createdAt          shared.CreatedAt
+	updatedAt          shared.CreatedAt
 }
 
 var (
 	titleLength       = 255
 	descriptionLength = 2000
 )
+
+func NewMentorRecruitment(id MentorRecruitmentID, userID, title string, category, consultationFormat, consultationMethod, budget, period, status int, description string, createdAt shared.CreatedAt) (*MentorRecruitment, error) {
+	return newMentorRecruitment(id, userID, title, category, consultationFormat, consultationMethod, budget, period, status, description, createdAt)
+}
 
 func newMentorRecruitment(id MentorRecruitmentID, userID, title string, category, consultationFormat, consultationMethod, budget, period, status int, description string, createdAt shared.CreatedAt) (*MentorRecruitment, error) {
 	if title == "" {
@@ -60,48 +52,65 @@ func newMentorRecruitment(id MentorRecruitmentID, userID, title string, category
 	}
 
 	return &MentorRecruitment{
-		ID:                 id,
-		UserID:             userID,
-		Title:              title,
-		Category:           category,
-		ConsultationFormat: consultationFormat,
-		ConsultationMethod: consultationMethod,
-		Description:        description,
-		Budget:             budget,
-		Period:             period,
-		Status:             status,
-		CreatedAt:          createdAt,
-		UpdatedAt:          createdAt,
+		id:                 id,
+		userID:             userID,
+		title:              title,
+		category:           category,
+		consultationFormat: consultationFormat,
+		consultationMethod: consultationMethod,
+		description:        description,
+		budget:             budget,
+		period:             period,
+		status:             status,
+		createdAt:          createdAt,
+		updatedAt:          createdAt,
 	}, nil
 }
 
-func (m *MentorRecruitment) UpdateMentorRecruitment(title, description string, category, consultationFormat, consultationMethod, budget, period, status int) error {
-	if title == "" {
-		return smperr.BadRequest("title must not be empty")
-	}
-	if description == "" {
-		return smperr.BadRequest("description must not be empty")
-	}
+func (m *MentorRecruitment) GetID() MentorRecruitmentID {
+	return m.id
+}
 
-	if l := utf8.RuneCountInString(title); l > titleLength {
-		return smperr.BadRequest(
-			fmt.Sprintf("title must be less than %d characters", titleLength),
-		)
-	}
-	if l := utf8.RuneCountInString(description); l > descriptionLength {
-		return smperr.BadRequest(
-			fmt.Sprintf("description must be less than %d characters", descriptionLength),
-		)
-	}
+func (m *MentorRecruitment) GetUserID() string {
+	return m.userID
+}
 
-	m.Title = title
-	m.Description = description
-	m.Category = category
-	m.ConsultationFormat = consultationFormat
-	m.ConsultationMethod = consultationMethod
-	m.Budget = budget
-	m.Period = period
-	m.Status = status
+func (m *MentorRecruitment) GetTitle() string {
+	return m.title
+}
 
-	return nil
+func (m *MentorRecruitment) GetCategory() int {
+	return m.category
+}
+
+func (m *MentorRecruitment) GetConsultationFormat() int {
+	return m.consultationFormat
+}
+
+func (m *MentorRecruitment) GetConsultationMethod() int {
+	return m.consultationMethod
+}
+
+func (m *MentorRecruitment) GetDescription() string {
+	return m.description
+}
+
+func (m *MentorRecruitment) GetBudget() int {
+	return m.budget
+}
+
+func (m *MentorRecruitment) GetPeriod() int {
+	return m.period
+}
+
+func (m *MentorRecruitment) GetStatus() int {
+	return m.status
+}
+
+func (m *MentorRecruitment) GetCreatedAt() shared.CreatedAt {
+	return m.createdAt
+}
+
+func (m *MentorRecruitment) GetUpdatedAt() shared.CreatedAt {
+	return m.updatedAt
 }

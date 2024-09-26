@@ -11,7 +11,6 @@ import (
 
 const (
 	errInvalidInputData = "Invalid input data for creating mentor recruitment"
-	errMentorNotFound   = "Mentor recruitment could not be found"
 	errStoreOperation   = "Store mentor recruitment"
 )
 
@@ -42,20 +41,14 @@ func (use *CreateMentorRecruitmentUsecase) Exec(ctx context.Context, in *mentori
 	}
 
 	if err := use.mentorRecruitmentRepository.Store(ctx, mentorRecruitment); err != nil {
-		if smperr.IsRecordNotFound(err) {
-			return nil, smperr.NotFound(errMentorNotFound)
-		}
-		return nil, &smperr.DatabaseError{
-			Operation: errStoreOperation,
-			Err:       err,
-		}
+		return nil, err
 	}
 
 	return &mentoroutput.CreateMentorRecruitmentOutput{
-		ID:                 mentorRecruitment.ID.String(),
+		ID:                 mentorRecruitment.GetID().String(),
 		Title:              mentorRecruitment.GetTitle(),
 		Description:        mentorRecruitment.GetDescription(),
 		CreatedAt:          mentorRecruitment.GetCreatedAt().Value(),
-		ConsultationMethod: mentorRecruitment.ConsultationMethod,
+		ConsultationMethod: mentorRecruitment.GetConsultationMethod(),
 	}, nil
 }
