@@ -13,12 +13,14 @@ type mentorRecruitmentRepositoryImpl struct {
 	db *gorm.DB
 }
 
+// NewMentorRecruitmentRepositoryImpl: リポジトリのコンストラクタ
 func NewMentorRecruitmentRepositoryImpl(db *gorm.DB) *mentorRecruitmentRepositoryImpl {
 	return &mentorRecruitmentRepositoryImpl{
 		db: db,
 	}
 }
 
+// FindByID: IDでMentorRecruitmentを取得
 func (repo *mentorRecruitmentRepositoryImpl) FindByID(ctx context.Context, id mentordm.MentorRecruitmentID) (*mentordm.MentorRecruitment, error) {
 	var mentorRecruitment mentordm.MentorRecruitment
 	if err := repo.db.WithContext(ctx).Where("id = ?", id.String()).First(&mentorRecruitment).Error; err != nil {
@@ -30,6 +32,7 @@ func (repo *mentorRecruitmentRepositoryImpl) FindByID(ctx context.Context, id me
 	return &mentorRecruitment, nil
 }
 
+// FindAll: 全てのMentorRecruitmentを取得
 func (repo *mentorRecruitmentRepositoryImpl) FindAll(ctx context.Context) ([]*mentordm.MentorRecruitment, error) {
 	var mentorRecruitments []*mentordm.MentorRecruitment
 	if err := repo.db.WithContext(ctx).Find(&mentorRecruitments).Error; err != nil {
@@ -38,6 +41,7 @@ func (repo *mentorRecruitmentRepositoryImpl) FindAll(ctx context.Context) ([]*me
 	return mentorRecruitments, nil
 }
 
+// Store: MentorRecruitmentを保存
 func (repo *mentorRecruitmentRepositoryImpl) Store(ctx context.Context, mentorRecruitment *mentordm.MentorRecruitment) error {
 	log.Printf("Storing mentor recruitment: %+v", mentorRecruitment)
 

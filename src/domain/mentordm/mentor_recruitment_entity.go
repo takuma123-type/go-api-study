@@ -9,18 +9,18 @@ import (
 )
 
 type MentorRecruitment struct {
-	id                 MentorRecruitmentID
-	userID             string
-	title              string
-	category           int
-	consultationFormat int
-	consultationMethod int
-	description        string
-	budget             int
-	period             int
-	status             int
-	createdAt          shared.CreatedAt
-	updatedAt          shared.CreatedAt
+	ID                 MentorRecruitmentID
+	UserID             string
+	Title              string
+	Category           int
+	ConsultationFormat int
+	ConsultationMethod int
+	Description        string
+	Budget             int
+	Period             int
+	Status             int
+	CreatedAt          shared.CreatedAt
+	UpdatedAt          shared.CreatedAt
 }
 
 var (
@@ -28,11 +28,7 @@ var (
 	descriptionLength = 2000
 )
 
-func NewMentorRecruitment(id MentorRecruitmentID, userID, title string, category, consultationFormat, consultationMethod, budget, period, status int, description string, createdAt shared.CreatedAt) (*MentorRecruitment, error) {
-	return newMentorRecruitment(id, userID, title, category, consultationFormat, consultationMethod, budget, period, status, description, createdAt)
-}
-
-func newMentorRecruitment(id MentorRecruitmentID, userID, title string, category, consultationFormat, consultationMethod, budget, period, status int, description string, createdAt shared.CreatedAt) (*MentorRecruitment, error) {
+func newMentorRecruitment(userID, title, description string, category, consultationFormat, consultationMethod, budget, period, status int) (*MentorRecruitment, error) {
 	if title == "" {
 		return nil, smperr.BadRequest("title must not be empty")
 	}
@@ -52,65 +48,65 @@ func newMentorRecruitment(id MentorRecruitmentID, userID, title string, category
 	}
 
 	return &MentorRecruitment{
-		id:                 id,
-		userID:             userID,
-		title:              title,
-		category:           category,
-		consultationFormat: consultationFormat,
-		consultationMethod: consultationMethod,
-		description:        description,
-		budget:             budget,
-		period:             period,
-		status:             status,
-		createdAt:          createdAt,
-		updatedAt:          createdAt,
+		ID:                 NewMentorRecruitmentID(),
+		UserID:             userID,
+		Title:              title,
+		Category:           category,
+		ConsultationFormat: consultationFormat,
+		ConsultationMethod: consultationMethod,
+		Description:        description,
+		Budget:             budget,
+		Period:             period,
+		Status:             status,
+		CreatedAt:          shared.NewCreatedAt(),
+		UpdatedAt:          shared.NewCreatedAt(),
 	}, nil
 }
 
 func (m *MentorRecruitment) GetID() MentorRecruitmentID {
-	return m.id
+	return m.ID
 }
 
 func (m *MentorRecruitment) GetUserID() string {
-	return m.userID
+	return m.UserID
 }
 
 func (m *MentorRecruitment) GetTitle() string {
-	return m.title
+	return m.Title
 }
 
 func (m *MentorRecruitment) GetCategory() int {
-	return m.category
+	return m.Category
 }
 
 func (m *MentorRecruitment) GetConsultationFormat() int {
-	return m.consultationFormat
+	return m.ConsultationFormat
 }
 
 func (m *MentorRecruitment) GetConsultationMethod() int {
-	return m.consultationMethod
+	return m.ConsultationMethod
 }
 
 func (m *MentorRecruitment) GetDescription() string {
-	return m.description
+	return m.Description
 }
 
 func (m *MentorRecruitment) GetBudget() int {
-	return m.budget
+	return m.Budget
 }
 
 func (m *MentorRecruitment) GetPeriod() int {
-	return m.period
+	return m.Period
 }
 
 func (m *MentorRecruitment) GetStatus() int {
-	return m.status
+	return m.Status
 }
 
 func (m *MentorRecruitment) GetCreatedAt() shared.CreatedAt {
-	return m.createdAt
+	return m.CreatedAt
 }
 
 func (m *MentorRecruitment) GetUpdatedAt() shared.CreatedAt {
-	return m.updatedAt
+	return m.UpdatedAt
 }

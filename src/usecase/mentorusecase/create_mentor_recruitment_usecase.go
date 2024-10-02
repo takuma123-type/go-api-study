@@ -9,11 +9,6 @@ import (
 	"github.com/takuma123-type/go-api-study/src/usecase/mentorusecase/mentoroutput"
 )
 
-const (
-	errInvalidInputData = "Invalid input data for creating mentor recruitment"
-	errStoreOperation   = "Store mentor recruitment"
-)
-
 type CreateMentorRecruitmentUsecase struct {
 	mentorRecruitmentRepository mentordm.MentorRecruitmentRepository
 }
@@ -37,11 +32,11 @@ func (use *CreateMentorRecruitmentUsecase) Exec(ctx context.Context, in *mentori
 		in.Status,
 	)
 	if err != nil {
-		return nil, smperr.BadRequest(errInvalidInputData)
+		return nil, smperr.BadRequest("Invalid input data for creating mentor recruitment")
 	}
 
 	if err := use.mentorRecruitmentRepository.Store(ctx, mentorRecruitment); err != nil {
-		return nil, err
+		return nil, smperr.Internal("Store mentor recruitment")
 	}
 
 	return &mentoroutput.CreateMentorRecruitmentOutput{

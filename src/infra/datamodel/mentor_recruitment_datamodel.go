@@ -1,56 +1,49 @@
-package datamodel
+package database
 
 import (
-	"time"
+	"context"
+	"log"
 
 	"github.com/takuma123-type/go-api-study/src/domain/mentordm"
-	"github.com/takuma123-type/go-api-study/src/domain/shared"
+	"github.com/takuma123-type/go-api-study/src/support/smperr"
+	"gorm.io/gorm"
 )
 
-type MentorRecruitmentDataModel struct {
-	ID                 string    `gorm:"column:id;primary_key"`
-	UserID             string    `gorm:"column:user_id"`
-	Title              string    `gorm:"column:title"`
-	Category           int       `gorm:"column:category"`
-	ConsultationFormat int       `gorm:"column:consultation_format"`
-	ConsultationMethod int       `gorm:"column:consultation_method"`
-	Description        string    `gorm:"column:description"`
-	Budget             int       `gorm:"column:budget"`
-	Period             int       `gorm:"column:period"`
-	Status             int       `gorm:"column:status"`
-	CreatedAt          time.Time `gorm:"column:created_at"`
-	UpdatedAt          time.Time `gorm:"column:updated_at"`
+type mentorRecruitmentRepositoryImpl struct {
+	db *gorm.DB
 }
 
-func (d *MentorRecruitmentDataModel) ToDomain() (*mentordm.MentorRecruitment, error) {
-	return mentordm.NewMentorRecruitment(
-		mentordm.MentorRecruitmentID(d.ID),
-		d.UserID,
-		d.Title,
-		d.Category,
-		d.ConsultationFormat,
-		d.ConsultationMethod,
-		d.Budget,
-		d.Period,
-		d.Status,
-		d.Description,
-		shared.CreatedAt(d.CreatedAt),
-	)
-}
-
-func FromDomain(m *mentordm.MentorRecruitment) *MentorRecruitmentDataModel {
-	return &MentorRecruitmentDataModel{
-		ID:                 string(m.GetID()),
-		UserID:             m.GetUserID(),
-		Title:              m.GetTitle(),
-		Category:           m.GetCategory(),
-		ConsultationFormat: m.GetConsultationFormat(),
-		ConsultationMethod: m.GetConsultationMethod(),
-		Description:        m.GetDescription(),
-		Budget:             m.GetBudget(),
-		Period:             m.GetPeriod(),
-		Status:             m.GetStatus(),
-		CreatedAt:          time.Time(m.GetCreatedAt()),
-		UpdatedAt:          time.Time(m.GetUpdatedAt()),
+func NewMentorRecruitmentRepositoryImpl(db *gorm.DB) *mentorRecruitmentRepositoryImpl {
+	return &mentorRecruitmentRepositoryImpl{
+		db: db,
 	}
+}
+
+func (repo *mentorRecruitmentRepositoryImpl) FindByID(ctx context.Context, id mentordm.MentorRecruitmentID) (*mentordm.MentorRecruitment, error) {
+	var mentorRecruitment mentordm.MentorRecruitment
+	if err := repo.db.WithContext(ctx).Where("id = ?", id.String()).First(&mentorRecruitment).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, smperr.NotFound("mentor recruitment not found")
+		}
+		return nil, err
+	}
+	return &mentorRecruitment, nil
+}
+
+func (repo *mentorRecruitmentRepositoryImpl) FindAll(ctx context.Context) ([]*mentordm.MentorRecruitment, error) {
+	var mentorRecruitments []*mentordm.MentorRecruitment
+	if err := repo.db.WithContext(ctx).Find(&mentorRecruitments).Error; err != nil {
+		return nil, err
+	}
+	return mentorRecruitments, nil
+}
+
+func (repo *mentorRecruitmentRepositoryImpl) Store(ctx context.Context, mentorRecruitment *mentordm.MentorRecruitment) error {
+	log.Printf("Storing mentor recruitment: %+v", mentorRecruitment)
+
+	if err := repo.db.WithContext(ctx).Create(&mentorRecruitment).Error; err != nil {
+		log.Printf("Failed to store mentor recruitment: %v", err)
+		return smperr.Internal("store mentor recruitment")
+	}
+	return nil
 }
