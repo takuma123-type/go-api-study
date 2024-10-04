@@ -22,5 +22,6 @@ func main() {
 	g.Use(middleware.HandleErrorMiddleware())
 	router.NewUserRouter(g)
 	router.NewMentorRouter(g)
+	router.NewPlanRouter(g)
 	log.Fatal(g.Run(":9090"))
 }
