@@ -69,6 +69,17 @@ func BadRequest(msg string) *BadRequestErr {
 	}
 }
 
+func BadRequestf(format string, args ...interface{}) *BadRequestErr {
+	msg := fmt.Sprintf(format, args...)
+	return &BadRequestErr{
+		&appErr{
+			code:  http.StatusBadRequest,
+			msg:   msg,
+			trace: errors.New(msg),
+		},
+	}
+}
+
 func Internal(msg string) *InternalErr {
 	return &InternalErr{
 		&appErr{
