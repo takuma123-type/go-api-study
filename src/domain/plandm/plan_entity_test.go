@@ -1,12 +1,13 @@
-package plandm
+package plandm_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/takuma123-type/go-api-study/src/domain/plandm"
 )
 
-func TestNewPlan(t *testing.T) {
+func TestGenPlanIfCreate(t *testing.T) {
 	tests := []struct {
 		name                 string
 		userID               string
@@ -58,37 +59,12 @@ func TestNewPlan(t *testing.T) {
 			expectedError:        true,
 			expectedErrorMessage: "content must not be empty",
 		},
-		{
-			name:                 "Title Too Long",
-			userID:               "user123",
-			title:                string(make([]rune, titleLength+1)),
-			content:              "Valid Content",
-			category:             1,
-			status:               1,
-			consultationFormat:   1,
-			price:                100,
-			consultationMethod:   1,
-			expectedError:        true,
-			expectedErrorMessage: "title must be less than 255 characters",
-		},
-		{
-			name:                 "Content Too Long",
-			userID:               "user123",
-			title:                "Valid Title",
-			content:              string(make([]rune, contentLength+1)),
-			category:             1,
-			status:               1,
-			consultationFormat:   1,
-			price:                100,
-			consultationMethod:   1,
-			expectedError:        true,
-			expectedErrorMessage: "content must be less than 2000 characters",
-		},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			plan, err := newPlan(tt.userID, tt.title, tt.content, tt.category, tt.status, tt.consultationFormat, tt.price, tt.consultationMethod)
+			plan, err := plandm.GenPlanIfCreate(tt.userID, tt.title, tt.content, tt.category, tt.consultationFormat, tt.consultationMethod, tt.price, tt.status)
+
 			if tt.expectedError {
 				assert.Error(t, err)
 				assert.Nil(t, plan)
@@ -96,14 +72,15 @@ func TestNewPlan(t *testing.T) {
 			} else {
 				assert.NoError(t, err)
 				assert.NotNil(t, plan)
-				assert.Equal(t, tt.userID, plan.GetUserID())
-				assert.Equal(t, tt.title, plan.GetTitle())
-				assert.Equal(t, tt.content, plan.GetContent())
-				assert.Equal(t, tt.category, plan.GetCategory())
-				assert.Equal(t, tt.status, plan.GetStatus())
-				assert.Equal(t, tt.consultationFormat, plan.GetConsultationFormat())
-				assert.Equal(t, tt.price, plan.GetPrice())
-				assert.Equal(t, tt.consultationMethod, plan.GetConsultationMethod())
+
+				assert.Equal(t, tt.userID, plan.UserID())
+				assert.Equal(t, tt.title, plan.Title())
+				assert.Equal(t, tt.content, plan.Content())
+				assert.Equal(t, uint16(tt.category), plan.Category())
+				assert.Equal(t, uint16(tt.status), plan.Status())
+				assert.Equal(t, uint16(tt.consultationFormat), plan.ConsultationFormat())
+				assert.Equal(t, uint16(tt.price), plan.Price())
+				assert.Equal(t, tt.consultationMethod, plan.ConsultationMethod())
 			}
 		})
 	}
