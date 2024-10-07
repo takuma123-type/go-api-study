@@ -1,7 +1,6 @@
 package plandm
 
 import (
-	"fmt"
 	"unicode/utf8"
 
 	"github.com/takuma123-type/go-api-study/src/domain/shared"
@@ -9,17 +8,17 @@ import (
 )
 
 type Plan struct {
-	ID                 PlanID `json:"id"`
-	UserID             string `json:"user_id,omitempty"`
-	Title              string `json:"title,omitempty"`
-	Category           int    `json:"category,omitempty"`
-	Content            string `json:"content,omitempty"`
-	Status             int    `json:"status,omitempty"`
-	ConsultationFormat int    `json:"consultation_format,omitempty"`
-	Price              int    `json:"price,omitempty"`
-	ConsultationMethod int    `json:"consultation_method,omitempty"`
-	CreatedAt          shared.CreatedAt
-	UpdatedAt          shared.UpdatedAt
+	id                 PlanID `json:"id"`
+	userID             string `json:"user_id,omitempty"`
+	title              string `json:"title,omitempty"`
+	category           uint16 `json:"category,omitempty"`
+	content            string `json:"content,omitempty"`
+	status             uint16 `json:"status,omitempty"`
+	consultationFormat uint16 `json:"consultation_format,omitempty"`
+	price              uint16 `json:"price,omitempty"`
+	consultationMethod int    `json:"consultation_method,omitempty"`
+	createdAt          shared.CreatedAt
+	updatedAt          shared.UpdatedAt
 }
 
 var (
@@ -36,69 +35,65 @@ func newPlan(userID, title, content string, category, status, consultationFormat
 	}
 
 	if l := utf8.RuneCountInString(title); l > titleLength {
-		return nil, smperr.BadRequest(
-			fmt.Sprintf("title must be less than %d characters", titleLength),
-		)
+		return nil, smperr.BadRequestf("title must be less than %d characters", titleLength)
 	}
 	if l := utf8.RuneCountInString(content); l > contentLength {
-		return nil, smperr.BadRequest(
-			fmt.Sprintf("content must be less than %d characters", contentLength),
-		)
+		return nil, smperr.BadRequestf("content must be less than %d characters", contentLength)
 	}
 
 	return &Plan{
-		ID:                 NewPlanID(),
-		UserID:             userID,
-		Title:              title,
-		Category:           category,
-		Content:            content,
-		Status:             status,
-		ConsultationFormat: consultationFormat,
-		Price:              price,
-		ConsultationMethod: consultationMethod,
+		id:                 NewPlanID(),
+		userID:             userID,
+		title:              title,
+		category:           uint16(category),
+		content:            content,
+		status:             uint16(status),
+		consultationFormat: uint16(consultationFormat),
+		price:              uint16(price),
+		consultationMethod: consultationMethod,
 	}, nil
 }
 
-func (p *Plan) GetID() PlanID {
-	return p.ID
+func (p *Plan) ID() PlanID {
+	return p.id
 }
 
-func (p *Plan) GetUserID() string {
-	return p.UserID
+func (p *Plan) UserID() string {
+	return p.userID
 }
 
-func (p *Plan) GetTitle() string {
-	return p.Title
+func (p *Plan) Title() string {
+	return p.title
 }
 
-func (p *Plan) GetCategory() int {
-	return p.Category
+func (p *Plan) Category() uint16 {
+	return p.category
 }
 
-func (p *Plan) GetContent() string {
-	return p.Content
+func (p *Plan) Content() string {
+	return p.content
 }
 
-func (p *Plan) GetStatus() int {
-	return p.Status
+func (p *Plan) Status() uint16 {
+	return p.status
 }
 
-func (p *Plan) GetConsultationFormat() int {
-	return p.ConsultationFormat
+func (p *Plan) ConsultationFormat() uint16 {
+	return p.consultationFormat
 }
 
-func (p *Plan) GetPrice() int {
-	return p.Price
+func (p *Plan) Price() uint16 {
+	return p.price
 }
 
-func (p *Plan) GetConsultationMethod() int {
-	return p.ConsultationMethod
+func (p *Plan) ConsultationMethod() int {
+	return p.consultationMethod
 }
 
-func (p *Plan) GetCreatedAt() shared.CreatedAt {
-	return p.CreatedAt
+func (p *Plan) CreatedAt() shared.CreatedAt {
+	return p.createdAt
 }
 
-func (p *Plan) GetUpdatedAt() shared.UpdatedAt {
-	return p.UpdatedAt
+func (p *Plan) UpdatedAt() shared.UpdatedAt {
+	return p.updatedAt
 }
