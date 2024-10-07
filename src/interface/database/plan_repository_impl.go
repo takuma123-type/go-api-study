@@ -28,8 +28,8 @@ func (repo *planRepositoryImpl) Store(ctx context.Context, plan *plandm.Plan) er
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
 
 	if err := repo.db.WithContext(ctx).Exec(query,
-		plan.GetID().String(), plan.GetUserID(), plan.GetTitle(), plan.GetContent(), plan.GetCategory(),
-		plan.GetStatus(), plan.GetConsultationFormat(), plan.GetPrice(), plan.GetConsultationMethod(),
+		plan.ID().String(), plan.UserID(), plan.Title(), plan.Content(), plan.Category(),
+		plan.Status(), plan.ConsultationFormat(), plan.Price(), plan.ConsultationMethod(),
 	).Error; err != nil {
 		log.Printf("Failed to store plan: %v", err)
 		return smperr.Internal("store plan")
