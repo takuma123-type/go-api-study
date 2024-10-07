@@ -20,7 +20,7 @@ func NewCreatePlan(repo plandm.PlanRepository) *CreatePlanUsecase {
 }
 
 func (p *CreatePlanUsecase) Create(ctx context.Context, in *planinput.CreatePlanInput) (*planoutput.CreatePlanOutput, error) {
-	plan, err := plandm.GenPlanCreate(
+	plan, err := plandm.GenPlanIfCreate(
 		in.UserID,
 		in.Title,
 		in.Content,
@@ -39,14 +39,14 @@ func (p *CreatePlanUsecase) Create(ctx context.Context, in *planinput.CreatePlan
 	}
 
 	return &planoutput.CreatePlanOutput{
-		ID:                 plan.GetID().String(),
-		UserID:             plan.GetUserID(),
-		Title:              plan.GetTitle(),
-		Category:           plan.GetCategory(),
-		Content:            plan.GetContent(),
-		Status:             plan.GetStatus(),
-		ConsultationFormat: plan.GetConsultationFormat(),
-		Price:              plan.GetPrice(),
-		ConsultationMethod: plan.GetConsultationMethod(),
+		ID:                 plan.ID().String(),
+		UserID:             plan.UserID(),
+		Title:              plan.Title(),
+		Category:           plan.Category(),
+		Content:            plan.Content(),
+		Status:             plan.Status(),
+		ConsultationFormat: plan.ConsultationFormat(),
+		Price:              plan.Price(),
+		ConsultationMethod: plan.ConsultationMethod(),
 	}, nil
 }
