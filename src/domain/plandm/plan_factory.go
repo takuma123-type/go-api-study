@@ -1,6 +1,6 @@
 package plandm
 
-func GenPlanCreate(userID, title, content string, category, consultationFormat, consultationMethod, price, status int) (*Plan, error) {
+func GenPlanIfCreate(userID, title, content string, category, consultationFormat, consultationMethod, price, status int) (*Plan, error) {
 	return newPlan(
 		userID,
 		title,
