@@ -21,6 +21,7 @@ func NewCreatePlan(repo plandm.PlanRepository) *CreatePlanUsecase {
 
 func (p *CreatePlanUsecase) Create(ctx context.Context, in *planinput.CreatePlanInput) (*planoutput.CreatePlanOutput, error) {
 	plan, err := plandm.GenPlanIfCreate(
+		in.ID,
 		in.UserID,
 		in.Title,
 		in.Content,

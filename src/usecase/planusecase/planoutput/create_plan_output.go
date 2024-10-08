@@ -9,5 +9,5 @@ type CreatePlanOutput struct {
 	Status             uint16 `json:"status,omitempty"`
 	ConsultationFormat uint16 `json:"consultation_format,omitempty"`
 	Price              uint16 `json:"price,omitempty"`
-	ConsultationMethod int    `json:"consultation_method,omitempty"`
+	ConsultationMethod uint8  `json:"consultation_method,omitempty"`
 }

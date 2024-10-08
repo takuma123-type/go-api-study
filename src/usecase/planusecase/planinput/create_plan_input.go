@@ -1,6 +1,7 @@
 package planinput
 
 type CreatePlanInput struct {
+	ID                 string `json:"id,omitempty"`
 	UserID             string `json:"user_id,omitempty"`
 	Title              string `json:"title,omitempty"`
 	Category           int    `json:"category,omitempty"`
