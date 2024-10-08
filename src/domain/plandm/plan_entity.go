@@ -16,7 +16,7 @@ type Plan struct {
 	status             uint16
 	consultationFormat uint16
 	price              uint16
-	consultationMethod int
+	consultationMethod uint8
 	createdAt          shared.CreatedAt
 	updatedAt          shared.UpdatedAt
 }
@@ -26,7 +26,7 @@ var (
 	contentLength = 2000
 )
 
-func newPlan(userID, title, content string, category, status, consultationFormat, price, consultationMethod int) (*Plan, error) {
+func newPlan(id PlanID, userID, title, content string, category, status, consultationFormat, price, consultationMethod int) (*Plan, error) {
 	if title == "" {
 		return nil, smperr.BadRequest("title must not be empty")
 	}
@@ -42,7 +42,7 @@ func newPlan(userID, title, content string, category, status, consultationFormat
 	}
 
 	return &Plan{
-		id:                 NewPlanID(),
+		id:                 id,
 		userID:             userID,
 		title:              title,
 		category:           uint16(category),
@@ -50,7 +50,7 @@ func newPlan(userID, title, content string, category, status, consultationFormat
 		status:             uint16(status),
 		consultationFormat: uint16(consultationFormat),
 		price:              uint16(price),
-		consultationMethod: consultationMethod,
+		consultationMethod: uint8(consultationMethod),
 	}, nil
 }
 
@@ -86,7 +86,7 @@ func (p *Plan) Price() uint16 {
 	return p.price
 }
 
-func (p *Plan) ConsultationMethod() int {
+func (p *Plan) ConsultationMethod() uint8 {
 	return p.consultationMethod
 }
 
