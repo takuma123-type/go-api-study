@@ -8,15 +8,15 @@ import (
 )
 
 type Plan struct {
-	id                 PlanID `json:"id"`
-	userID             string `json:"user_id,omitempty"`
-	title              string `json:"title,omitempty"`
-	category           uint16 `json:"category,omitempty"`
-	content            string `json:"content,omitempty"`
-	status             uint16 `json:"status,omitempty"`
-	consultationFormat uint16 `json:"consultation_format,omitempty"`
-	price              uint16 `json:"price,omitempty"`
-	consultationMethod int    `json:"consultation_method,omitempty"`
+	id                 PlanID
+	userID             string
+	title              string
+	category           uint16
+	content            string
+	status             uint16
+	consultationFormat uint16
+	price              uint16
+	consultationMethod int
 	createdAt          shared.CreatedAt
 	updatedAt          shared.UpdatedAt
 }
