@@ -5,7 +5,7 @@ import (
 	"context"
 
 	"github.com/takuma123-type/go-api-study/src/domain/contractdm"
-	"github.com/takuma123-type/go-api-study/src/domain/plandm" // 追加
+	"github.com/takuma123-type/go-api-study/src/domain/plandm"
 	"github.com/takuma123-type/go-api-study/src/interface/presenter"
 	"github.com/takuma123-type/go-api-study/src/usecase/contractusecase"
 	"github.com/takuma123-type/go-api-study/src/usecase/contractusecase/contractinput"
@@ -14,7 +14,7 @@ import (
 type ContractController struct {
 	delivery     presenter.ContractPresenter
 	contractRepo contractdm.ContractRepository
-	planRepo     plandm.PlanRepository // 追加
+	planRepo     plandm.PlanRepository
 }
 
 func NewContractController(p presenter.ContractPresenter, contractRepo contractdm.ContractRepository, planRepo plandm.PlanRepository) *ContractController {
@@ -26,7 +26,7 @@ func NewContractController(p presenter.ContractPresenter, contractRepo contractd
 }
 
 func (c *ContractController) CreateContract(ctx context.Context, in *contractinput.CreateContractInput) error {
-	usecase := contractusecase.NewCreateContract(c.contractRepo, c.planRepo) // プランリポジトリを渡す
+	usecase := contractusecase.NewCreateContract(c.contractRepo, c.planRepo)
 	out, err := usecase.Create(ctx, in)
 	if err != nil {
 		return err
