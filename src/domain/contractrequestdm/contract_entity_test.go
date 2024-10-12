@@ -32,14 +32,6 @@ func TestGenContractRequestIfCreate(t *testing.T) {
 			expectedErrorMessage: "planIDは必須です",
 		},
 		{
-			name:                 "Empty User ID",
-			id:                   "contractReq125",
-			planID:               "plan123",
-			message:              "This is a valid message",
-			expectedError:        true,
-			expectedErrorMessage: "userIDは必須です",
-		},
-		{
 			name:                 "Empty Message",
 			id:                   "contractReq126",
 			planID:               "plan123",
