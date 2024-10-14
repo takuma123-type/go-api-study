@@ -1,6 +1,8 @@
 package contractrequestdm
 
 import (
+	"unicode/utf8"
+
 	"github.com/takuma123-type/go-api-study/src/domain/plandm"
 	"github.com/takuma123-type/go-api-study/src/domain/shared"
 	"github.com/takuma123-type/go-api-study/src/support/smperr"
@@ -11,7 +13,6 @@ type ContractRequest struct {
 	planID    plandm.PlanID
 	message   string
 	createdAt shared.CreatedAt
-	updatedAt shared.UpdatedAt
 }
 
 func newContractRequest(id ContractRequestID, planID plandm.PlanID, message string) (*ContractRequest, error) {
@@ -21,7 +22,7 @@ func newContractRequest(id ContractRequestID, planID plandm.PlanID, message stri
 	if message == "" {
 		return nil, smperr.BadRequest("メッセージは必須です")
 	}
-	if len(message) > 500 {
+	if utf8.RuneCountInString(message) > 500 {
 		return nil, smperr.BadRequest("メッセージは500文字以内で入力してください")
 	}
 
@@ -46,8 +47,4 @@ func (r *ContractRequest) Message() string {
 
 func (r *ContractRequest) CreatedAt() shared.CreatedAt {
 	return r.createdAt
-}
-
-func (r *ContractRequest) UpdatedAt() shared.UpdatedAt {
-	return r.updatedAt
 }
