@@ -9,19 +9,19 @@ import (
 	"github.com/takuma123-type/go-api-study/src/usecase/contractrequestusecase/contractrequestinput"
 )
 
-type ContractRequestController struct {
+type contractRequestController struct {
 	delivery            presenter.ContractRequestPresenter
 	contractRequestRepo contractrequestdm.ContractRequestRepository
 }
 
-func NewContractRequestController(p presenter.ContractRequestPresenter, contractRequestRepo contractrequestdm.ContractRequestRepository) *ContractRequestController {
-	return &ContractRequestController{
+func NewContractRequestController(p presenter.ContractRequestPresenter, contractRequestRepo contractrequestdm.ContractRequestRepository) *contractRequestController {
+	return &contractRequestController{
 		delivery:            p,
 		contractRequestRepo: contractRequestRepo,
 	}
 }
 
-func (c *ContractRequestController) CreateContractRequest(ctx context.Context, in *contractrequestinput.CreateContractRequestInput) error {
+func (c *contractRequestController) CreateContractRequest(ctx context.Context, in *contractrequestinput.CreateContractRequestInput) error {
 	usecase := contractrequestusecase.NewCreateContractRequest(c.contractRequestRepo)
 	out, err := usecase.Create(ctx, in)
 	if err != nil {
