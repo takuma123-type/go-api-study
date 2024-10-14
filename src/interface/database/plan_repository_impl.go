@@ -36,19 +36,3 @@ func (repo *planRepositoryImpl) Store(ctx context.Context, plan *plandm.Plan) er
 	}
 	return nil
 }
-
-func (repo *planRepositoryImpl) UpdateStatus(ctx context.Context, planID string, status uint8) error {
-	log.Printf("Updating status for plan ID: %s to status: %d", planID, status)
-
-	query := `
-        UPDATE plans
-        SET status = ?
-        WHERE id = ?`
-
-	if err := repo.db.WithContext(ctx).Exec(query, status, planID).Error; err != nil {
-		log.Printf("Failed to update status for plan ID %s: %v", planID, err)
-		return err
-	}
-
-	return nil
-}
