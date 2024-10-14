@@ -20,13 +20,11 @@ func NewCreateContractRequest(repo contractrequestdm.ContractRequestRepository) 
 }
 
 func (u *CreateContractRequestUsecase) Create(ctx context.Context, in *contractrequestinput.CreateContractRequestInput) (*contractrequestoutput.CreateContractRequestOutput, error) {
-	contractRequestID := contractrequestdm.NewContractRequestID()
-
 	contractRequest, err := contractrequestdm.GenContractRequestIfCreate(
-		contractRequestID.String(),
 		in.PlanID,
 		in.Message,
 	)
+
 	if err != nil {
 		return nil, smperr.BadRequest(err.Error())
 	}
