@@ -2,7 +2,6 @@ package database
 
 import (
 	"context"
-	"log"
 
 	"github.com/takuma123-type/go-api-study/src/domain/contractrequestdm"
 	"gorm.io/gorm"
@@ -19,7 +18,6 @@ func NewContractRequestRepositoryImpl(db *gorm.DB) *contractRequestRepositoryImp
 }
 
 func (repo *contractRequestRepositoryImpl) Store(ctx context.Context, contractRequest *contractrequestdm.ContractRequest) error {
-	log.Printf("Storing contract request: %+v", contractRequest)
 
 	query := `
     INSERT INTO contract_approvals
@@ -31,7 +29,6 @@ func (repo *contractRequestRepositoryImpl) Store(ctx context.Context, contractRe
 		contractRequest.PlanID().String(),
 		contractRequest.Message(),
 	).Error; err != nil {
-		log.Printf("Failed to store contract request: %v", err)
 		return err
 	}
 	return nil
