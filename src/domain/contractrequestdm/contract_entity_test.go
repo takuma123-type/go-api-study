@@ -10,7 +10,6 @@ import (
 func TestGenContractRequestIfCreate(t *testing.T) {
 	tests := []struct {
 		name                 string
-		id                   string
 		planID               string
 		message              string
 		expectedError        bool
@@ -18,14 +17,12 @@ func TestGenContractRequestIfCreate(t *testing.T) {
 	}{
 		{
 			name:          "Valid Contract Request",
-			id:            "contractReq123",
 			planID:        "plan123",
 			message:       "This is a valid message",
 			expectedError: false,
 		},
 		{
 			name:                 "Empty Plan ID",
-			id:                   "contractReq124",
 			planID:               "",
 			message:              "This is a valid message",
 			expectedError:        true,
@@ -33,7 +30,6 @@ func TestGenContractRequestIfCreate(t *testing.T) {
 		},
 		{
 			name:                 "Empty Message",
-			id:                   "contractReq126",
 			planID:               "plan123",
 			message:              "",
 			expectedError:        true,
@@ -41,7 +37,6 @@ func TestGenContractRequestIfCreate(t *testing.T) {
 		},
 		{
 			name:                 "Message Too Long",
-			id:                   "contractReq127",
 			planID:               "plan123",
 			message:              "This message is way too long" + string(make([]byte, 501)), // 501文字のメッセージ
 			expectedError:        true,
@@ -52,7 +47,6 @@ func TestGenContractRequestIfCreate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			contractRequest, err := contractrequestdm.GenContractRequestIfCreate(
-				tt.id,
 				tt.planID,
 				tt.message,
 			)
@@ -65,7 +59,6 @@ func TestGenContractRequestIfCreate(t *testing.T) {
 				assert.NoError(t, err)
 				assert.NotNil(t, contractRequest)
 
-				assert.Equal(t, tt.id, contractRequest.ID().String())
 				assert.Equal(t, tt.planID, contractRequest.PlanID().String())
 				assert.Equal(t, tt.message, contractRequest.Message())
 			}
