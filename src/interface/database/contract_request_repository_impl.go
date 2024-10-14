@@ -20,7 +20,7 @@ func NewContractRequestRepositoryImpl(db *gorm.DB) *contractRequestRepositoryImp
 func (repo *contractRequestRepositoryImpl) Store(ctx context.Context, contractRequest *contractrequestdm.ContractRequest) error {
 
 	query := `
-    INSERT INTO contract_approvals
+    INSERT INTO contracts
     (id, plan_id, message)
     VALUES (?, ?, ?)`
 
