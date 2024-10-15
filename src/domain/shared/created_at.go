@@ -15,3 +15,7 @@ func (c CreatedAt) Value() time.Time {
 func (c CreatedAt) Equal(c2 CreatedAt) bool {
 	return c.Value().Equal(c2.Value())
 }
+
+func (c CreatedAt) Time() time.Time {
+	return time.Time(c)
+}
