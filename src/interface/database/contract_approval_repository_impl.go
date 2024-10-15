@@ -21,12 +21,12 @@ func (repo *contractApprovalRepositoryImpl) Store(ctx context.Context, contractA
 
 	query := `
     INSERT INTO contract_approvals
-    (id, plan_id, message)
+    (id, contract_id, message)
     VALUES (?, ?, ?)`
 
 	if err := repo.db.WithContext(ctx).Exec(query,
 		contractApproval.ID().String(),
-		contractApproval.PlanID().String(),
+		contractApproval.ContractRequestID().String(),
 		contractApproval.Message(),
 	).Error; err != nil {
 		return err
