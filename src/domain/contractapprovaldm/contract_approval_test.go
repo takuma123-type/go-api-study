@@ -10,35 +10,35 @@ import (
 func TestGenContractApprovalIfCreate(t *testing.T) {
 	tests := []struct {
 		name                 string
-		planID               string
+		contractRequestID    string
 		message              string
 		expectedError        bool
 		expectedErrorMessage string
 	}{
 		{
-			name:          "Valid Contract Approval",
-			planID:        "plan123",
-			message:       "This is a valid message",
-			expectedError: false,
+			name:              "Valid Contract Approval",
+			contractRequestID: "contractReq123",
+			message:           "This is a valid message",
+			expectedError:     false,
 		},
 		{
-			name:                 "Empty Plan ID",
-			planID:               "",
+			name:                 "Empty Contract Request ID",
+			contractRequestID:    "",
 			message:              "This is a valid message",
 			expectedError:        true,
-			expectedErrorMessage: "planIDは必須です",
+			expectedErrorMessage: "contractRequestIDは必須です",
 		},
 		{
 			name:                 "Empty Message",
-			planID:               "plan123",
+			contractRequestID:    "contractReq123",
 			message:              "",
 			expectedError:        true,
 			expectedErrorMessage: "メッセージは必須です",
 		},
 		{
 			name:                 "Message Too Long",
-			planID:               "plan123",
-			message:              "This message is way too long" + string(make([]byte, 501)), // 501文字のメッセージ
+			contractRequestID:    "contractReq123",
+			message:              "This message is way too long" + string(make([]byte, 501)),
 			expectedError:        true,
 			expectedErrorMessage: "メッセージは500文字以内で入力してください",
 		},
@@ -47,7 +47,7 @@ func TestGenContractApprovalIfCreate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			contractApproval, err := contractapprovaldm.GenContractApprovalIfCreate(
-				tt.planID,
+				tt.contractRequestID,
 				tt.message,
 			)
 
@@ -59,7 +59,7 @@ func TestGenContractApprovalIfCreate(t *testing.T) {
 				assert.NoError(t, err)
 				assert.NotNil(t, contractApproval)
 
-				assert.Equal(t, tt.planID, contractApproval.PlanID().String())
+				assert.Equal(t, tt.contractRequestID, contractApproval.ContractRequestID().String())
 				assert.Equal(t, tt.message, contractApproval.Message())
 			}
 		})
