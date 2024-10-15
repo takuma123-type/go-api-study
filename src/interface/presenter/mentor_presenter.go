@@ -18,8 +18,13 @@ func NewMentorPresenter(p Presenter) MentorPresenter {
 
 type MentorPresenter interface {
 	CreateMentorRecruitment(out *mentoroutput.CreateMentorRecruitmentOutput)
+	FindAllMentorRecruitment(out []*mentoroutput.FindAllMentorRecruitmentOutput)
 }
 
 func (p *mentorPresent) CreateMentorRecruitment(out *mentoroutput.CreateMentorRecruitmentOutput) {
 	p.delivery.JSON(http.StatusCreated, out)
+}
+
+func (p *mentorPresent) FindAllMentorRecruitment(out []*mentoroutput.FindAllMentorRecruitmentOutput) {
+	p.delivery.JSON(http.StatusOK, out)
 }

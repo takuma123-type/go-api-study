@@ -1,27 +1,43 @@
 package mentordm
 
 import (
+	"database/sql/driver"
+	"fmt"
+
 	"github.com/google/uuid"
-	"golang.org/x/xerrors"
 )
 
-type MentorRecruitmentID string
+type MentorRecruitmentID uuid.UUID
 
 func NewMentorRecruitmentID() MentorRecruitmentID {
-	return MentorRecruitmentID(uuid.New().String())
-}
-
-func NewMentorRecruitmentIDByVal(val string) (MentorRecruitmentID, error) {
-	if val == "" {
-		return MentorRecruitmentID(""), xerrors.New("mentor recruitment id must not be empty")
-	}
-	return MentorRecruitmentID(val), nil
+	return MentorRecruitmentID(uuid.New())
 }
 
 func (id MentorRecruitmentID) String() string {
-	return string(id)
+	return uuid.UUID(id).String()
 }
 
-func (id MentorRecruitmentID) Equal(mentorID2 MentorRecruitmentID) bool {
-	return string(id) == string(mentorID2)
+func (id *MentorRecruitmentID) Scan(value interface{}) error {
+	switch v := value.(type) {
+	case []byte:
+		u, err := uuid.ParseBytes(v)
+		if err != nil {
+			return err
+		}
+		*id = MentorRecruitmentID(u)
+		return nil
+	case string:
+		u, err := uuid.Parse(v)
+		if err != nil {
+			return err
+		}
+		*id = MentorRecruitmentID(u)
+		return nil
+	default:
+		return fmt.Errorf("unsupported Scan, storing driver.Value type %T into type MentorRecruitmentID", v)
+	}
+}
+
+func (id MentorRecruitmentID) Value() (driver.Value, error) {
+	return uuid.UUID(id).String(), nil
 }

@@ -36,4 +36,19 @@ func NewMentorRouter(g *gin.Engine) {
 			}
 		})
 	}
+
+	api.GET("/mentor_recruitment", func(ctx *gin.Context) {
+		db, err := rdb.GetDBFromContext(ctx)
+		if err != nil {
+			smperr.HandleError(ctx, err, http.StatusInternalServerError)
+			return
+		}
+
+		mentorRepoImpl := database.NewMentorRecruitmentRepositoryImpl(db)
+		err = controller.NewMentorController(presenter.NewMentorPresenter(ctx), mentorRepoImpl).FindAllMentorRecruitment(ctx)
+		if err != nil {
+			smperr.HandleError(ctx, err, http.StatusInternalServerError)
+			return
+		}
+	})
 }

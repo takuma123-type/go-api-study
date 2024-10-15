@@ -1,7 +1,6 @@
 package mentordm
 
 import (
-	"fmt"
 	"unicode/utf8"
 
 	"github.com/takuma123-type/go-api-study/src/domain/shared"
@@ -37,14 +36,10 @@ func newMentorRecruitment(userID, title, description string, category, consultat
 	}
 
 	if l := utf8.RuneCountInString(title); l > titleLength {
-		return nil, smperr.BadRequest(
-			fmt.Sprintf("title must be less than %d characters", titleLength),
-		)
+		return nil, smperr.BadRequest("title must be less than 255 characters")
 	}
 	if l := utf8.RuneCountInString(description); l > descriptionLength {
-		return nil, smperr.BadRequest(
-			fmt.Sprintf("description must be less than %d characters", descriptionLength),
-		)
+		return nil, smperr.BadRequest("description must be less than 2000 characters")
 	}
 
 	return &MentorRecruitment{
