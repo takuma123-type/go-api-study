@@ -21,7 +21,7 @@ func NewCreateContractApproval(repo contractapprovaldm.ContractApprovalRepositor
 
 func (u *CreateContractApprovalUsecase) Create(ctx context.Context, in *contractapprovalinput.CreateContractApprovalInput) (*contractapprovaloutput.CreateContractApprovalOutput, error) {
 	contractApproval, err := contractapprovaldm.GenContractApprovalIfCreate(
-		in.PlanID,
+		in.ContractRequestID,
 		in.Message,
 	)
 
@@ -34,8 +34,8 @@ func (u *CreateContractApprovalUsecase) Create(ctx context.Context, in *contract
 	}
 
 	return &contractapprovaloutput.CreateContractApprovalOutput{
-		ID:      contractApproval.ID().String(),
-		PlanID:  contractApproval.PlanID().String(),
-		Message: contractApproval.Message(),
+		ID:                contractApproval.ID().String(),
+		ContractRequestID: contractApproval.ContractRequestID().String(),
+		Message:           contractApproval.Message(),
 	}, nil
 }
