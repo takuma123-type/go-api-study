@@ -30,7 +30,7 @@ func (u *CreateContractApprovalUsecase) Create(ctx context.Context, in *contract
 	}
 
 	if err := u.contractApprovalRepository.Store(ctx, contractApproval); err != nil {
-		return nil, smperr.Internal(err.Error())
+		return nil, err
 	}
 
 	return &contractapprovaloutput.CreateContractApprovalOutput{
