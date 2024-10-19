@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"github.com/takuma123-type/go-api-study/src/domain/mentordm"
-	"github.com/takuma123-type/go-api-study/src/support/smperr"
 	"gorm.io/gorm"
 )
 
@@ -35,7 +34,7 @@ func (repo *mentorRecruitmentRepositoryImpl) Store(ctx context.Context, mentorRe
 		mentorRecruitment.GetConsultationFormat(), mentorRecruitment.GetConsultationMethod(), mentorRecruitment.GetDescription(),
 		mentorRecruitment.GetBudget(), mentorRecruitment.GetPeriod(), mentorRecruitment.GetStatus(), mentorRecruitment.CreatedAt.Value(),
 	).Error; err != nil {
-		return smperr.Internal("store mentor recruitment")
+		return err
 	}
 	return nil
 }
