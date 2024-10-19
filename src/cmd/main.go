@@ -24,5 +24,6 @@ func main() {
 	router.NewMentorRouter(g)
 	router.NewPlanRouter(g)
 	router.NewContractRequestRouter(g)
+	router.NewContractApprovalRouter(g)
 	log.Fatal(g.Run(":9090"))
 }
