@@ -24,8 +24,8 @@ func TestGenPlanIfCreate(t *testing.T) {
 	}{
 		{
 			name:               "Valid Plan",
-			id:                 "plan123",
-			userID:             "user123",
+			id:                 "2b2d4aad-d251-4837-91ed-614d9a9c72df", // 正しいUUID形式
+			userID:             "e611ba02-7d90-4ba5-9338-07ea2efc8d9b", // 正しいUUID形式
 			title:              "Valid Title",
 			content:            "Valid Content",
 			category:           1,
@@ -37,8 +37,8 @@ func TestGenPlanIfCreate(t *testing.T) {
 		},
 		{
 			name:                 "Empty Title",
-			id:                   "plan124",
-			userID:               "user123",
+			id:                   "2b2d4aad-d251-4837-91ed-614d9a9c72df", // 正しいUUID形式
+			userID:               "e611ba02-7d90-4ba5-9338-07ea2efc8d9b", // 正しいUUID形式
 			title:                "",
 			content:              "Valid Content",
 			category:             1,
@@ -51,8 +51,8 @@ func TestGenPlanIfCreate(t *testing.T) {
 		},
 		{
 			name:                 "Empty Content",
-			id:                   "plan125",
-			userID:               "user123",
+			id:                   "2b2d4aad-d251-4837-91ed-614d9a9c72df", // 正しいUUID形式
+			userID:               "e611ba02-7d90-4ba5-9338-07ea2efc8d9b", // 正しいUUID形式
 			title:                "Valid Title",
 			content:              "",
 			category:             1,
