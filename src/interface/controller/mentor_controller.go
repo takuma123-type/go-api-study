@@ -34,7 +34,7 @@ func (c *mentorController) CreateMentorRecruitment(ctx context.Context, in *ment
 
 func (c *mentorController) FindAllMentorRecruitment(ctx *gin.Context) error {
 	usecase := mentorusecase.NewFindAllMentorRecruitment(c.mentorRepo)
-	out, err := usecase.Fetch(ctx)
+	out, err := usecase.Fetch(ctx.Request.Context())
 	if err != nil {
 		return err
 	}
