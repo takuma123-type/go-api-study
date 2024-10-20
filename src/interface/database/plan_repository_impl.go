@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/takuma123-type/go-api-study/src/domain/plandm"
+	"github.com/takuma123-type/go-api-study/src/infra/datamodel"
 	"github.com/takuma123-type/go-api-study/src/support/smperr"
 	"gorm.io/gorm"
 )
@@ -17,6 +18,20 @@ func NewPlanRepositoryImpl(db *gorm.DB) *planRepositoryImpl {
 	return &planRepositoryImpl{
 		db: db,
 	}
+}
+
+func (repo *planRepositoryImpl) FindAll(ctx context.Context) ([]*plandm.Plan, error) {
+	var planModels []datamodel.Plan
+	if err := repo.db.WithContext(ctx).Find(&planModels).Error; err != nil {
+		return nil, err
+	}
+
+	var plans []*plandm.Plan
+	for _, planModel := range planModels {
+		plans = append(plans, planModel.ToEntity())
+	}
+
+	return plans, nil
 }
 
 func (repo *planRepositoryImpl) Store(ctx context.Context, plan *plandm.Plan) error {

@@ -3,23 +3,27 @@ package presenter
 import (
 	"net/http"
 
+	"github.com/gin-gonic/gin"
 	"github.com/takuma123-type/go-api-study/src/usecase/planusecase/planoutput"
 )
 
-type planPresent struct {
-	delivery Presenter
-}
-
-func NewPlanPresenter(p Presenter) PlanPresenter {
-	return &planPresent{
-		delivery: p,
-	}
-}
-
 type PlanPresenter interface {
-	CreatePlan(out *planoutput.CreatePlanOutput)
+	CreatePlan(output *planoutput.CreatePlanOutput)
+	FindAllPlan(output []*planoutput.FindAllPlanOutput)
 }
 
-func (p *planPresent) CreatePlan(out *planoutput.CreatePlanOutput) {
-	p.delivery.JSON(http.StatusCreated, out)
+type PlanPresenterImpl struct {
+	ctx *gin.Context
+}
+
+func NewPlanPresenter(ctx *gin.Context) PlanPresenter {
+	return &PlanPresenterImpl{ctx: ctx}
+}
+
+func (p *PlanPresenterImpl) CreatePlan(output *planoutput.CreatePlanOutput) {
+	p.ctx.JSON(http.StatusOK, output)
+}
+
+func (p *PlanPresenterImpl) FindAllPlan(output []*planoutput.FindAllPlanOutput) {
+	p.ctx.JSON(http.StatusOK, output)
 }
