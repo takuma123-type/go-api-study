@@ -26,16 +26,16 @@ func (uc *FindAllMentorRecruitment) Fetch(ctx context.Context) ([]*mentoroutput.
 	var output []*mentoroutput.FindAllMentorRecruitmentOutput
 	for _, mentor := range mentorRecruitments {
 		output = append(output, &mentoroutput.FindAllMentorRecruitmentOutput{
-			ID:                 mentor.GetID().String(),
-			UserID:             mentor.GetUserID(),
-			Title:              mentor.GetTitle(),
-			Category:           mentor.GetCategory(),
-			ConsultationFormat: mentor.GetConsultationFormat(),
-			Description:        mentor.GetDescription(),
-			Budget:             mentor.GetBudget(),
-			Period:             mentor.GetPeriod(),
-			Status:             mentor.GetStatus(),
-			CreatedAt:          mentor.GetCreatedAt().Value(),
+			ID:                 mentor.ID().String(),
+			UserID:             mentor.UserID(),
+			Title:              mentor.Title(),
+			Category:           mentor.Category(),
+			ConsultationFormat: mentor.ConsultationFormat(),
+			Description:        mentor.Description(),
+			Budget:             mentor.Budget(),
+			Period:             mentor.Period(),
+			Status:             mentor.Status(),
+			CreatedAt:          mentor.CreatedAt().Value(),
 		})
 	}
 
