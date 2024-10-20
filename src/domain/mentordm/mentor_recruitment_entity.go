@@ -8,18 +8,18 @@ import (
 )
 
 type MentorRecruitment struct {
-	ID                 MentorRecruitmentID
-	UserID             string
-	Title              string
-	Category           int
-	ConsultationFormat int
-	ConsultationMethod int
-	Description        string
-	Budget             int
-	Period             int
-	Status             int
-	CreatedAt          shared.CreatedAt
-	UpdatedAt          shared.CreatedAt
+	id                 MentorRecruitmentID
+	userID             string
+	title              string
+	category           int
+	consultationFormat int
+	consultationMethod int
+	description        string
+	budget             int
+	period             int
+	status             int
+	createdAt          shared.CreatedAt
+	updatedAt          shared.CreatedAt
 }
 
 var (
@@ -43,65 +43,63 @@ func newMentorRecruitment(userID, title, description string, category, consultat
 	}
 
 	return &MentorRecruitment{
-		ID:                 NewMentorRecruitmentID(),
-		UserID:             userID,
-		Title:              title,
-		Category:           category,
-		ConsultationFormat: consultationFormat,
-		ConsultationMethod: consultationMethod,
-		Description:        description,
-		Budget:             budget,
-		Period:             period,
-		Status:             status,
-		CreatedAt:          shared.NewCreatedAt(),
-		UpdatedAt:          shared.NewCreatedAt(),
+		id:                 NewMentorRecruitmentID(),
+		userID:             userID,
+		title:              title,
+		category:           category,
+		consultationFormat: consultationFormat,
+		consultationMethod: consultationMethod,
+		description:        description,
+		budget:             budget,
+		period:             period,
+		status:             status,
 	}, nil
 }
 
-func (m *MentorRecruitment) GetID() MentorRecruitmentID {
-	return m.ID
+func (m *MentorRecruitment) ID() MentorRecruitmentID {
+	return m.id
 }
 
-func (m *MentorRecruitment) GetUserID() string {
-	return m.UserID
+func (m *MentorRecruitment) UserID() string {
+	return m.userID
 }
 
-func (m *MentorRecruitment) GetTitle() string {
-	return m.Title
+func (m *MentorRecruitment) Title() string {
+	return m.title
 }
 
-func (m *MentorRecruitment) GetCategory() int {
-	return m.Category
+func (m *MentorRecruitment) Category() int {
+	return m.category
 }
 
-func (m *MentorRecruitment) GetConsultationFormat() int {
-	return m.ConsultationFormat
+func (m *MentorRecruitment) ConsultationFormat() int {
+	return m.consultationFormat
 }
 
-func (m *MentorRecruitment) GetConsultationMethod() int {
-	return m.ConsultationMethod
+func (m *MentorRecruitment) ConsultationMethod() int {
+	return m.consultationMethod
 }
 
-func (m *MentorRecruitment) GetDescription() string {
-	return m.Description
+func (m *MentorRecruitment) Description() string {
+	return m.description
 }
 
-func (m *MentorRecruitment) GetBudget() int {
-	return m.Budget
+func (m *MentorRecruitment) Budget() int {
+	return m.budget
 }
 
-func (m *MentorRecruitment) GetPeriod() int {
-	return m.Period
+func (m *MentorRecruitment) Period() int {
+	return m.period
 }
 
-func (m *MentorRecruitment) GetStatus() int {
-	return m.Status
+func (m *MentorRecruitment) Status() int {
+	return m.status
 }
 
-func (m *MentorRecruitment) GetCreatedAt() shared.CreatedAt {
-	return m.CreatedAt
+func (m *MentorRecruitment) CreatedAt() shared.CreatedAt {
+	return m.createdAt
 }
 
-func (m *MentorRecruitment) GetUpdatedAt() shared.CreatedAt {
-	return m.UpdatedAt
+func (m *MentorRecruitment) UpdatedAt() shared.CreatedAt {
+	return m.updatedAt
 }
