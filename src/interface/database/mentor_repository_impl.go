@@ -24,9 +24,9 @@ func (repo *mentorRecruitmentRepositoryImpl) FindAll(ctx context.Context) ([]*me
 		return nil, err
 	}
 
-	var mentorRecruitments []*mentordm.MentorRecruitment
-	for _, model := range mentorRecruitmentModels {
-		mentorRecruitments = append(mentorRecruitments, model.ToEntity())
+	mentorRecruitments := make([]*mentordm.MentorRecruitment, len(mentorRecruitmentModels))
+	for i, model := range mentorRecruitmentModels {
+		mentorRecruitments[i] = model.ToEntity()
 	}
 
 	return mentorRecruitments, nil
