@@ -40,10 +40,10 @@ func (use *CreateMentorRecruitmentUsecase) Exec(ctx context.Context, in *mentori
 	}
 
 	return &mentoroutput.CreateMentorRecruitmentOutput{
-		ID:                 mentorRecruitment.GetID().String(),
-		Title:              mentorRecruitment.GetTitle(),
-		Description:        mentorRecruitment.GetDescription(),
-		CreatedAt:          mentorRecruitment.GetCreatedAt().Value(),
-		ConsultationMethod: mentorRecruitment.GetConsultationMethod(),
+		ID:                 mentorRecruitment.ID().String(),
+		Title:              mentorRecruitment.Title(),
+		Description:        mentorRecruitment.Description(),
+		CreatedAt:          mentorRecruitment.CreatedAt().Value(),
+		ConsultationMethod: mentorRecruitment.ConsultationMethod(),
 	}, nil
 }

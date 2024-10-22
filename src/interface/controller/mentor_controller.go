@@ -2,12 +2,10 @@ package controller
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/takuma123-type/go-api-study/src/domain/mentordm"
 	"github.com/takuma123-type/go-api-study/src/interface/presenter"
-	"github.com/takuma123-type/go-api-study/src/support/smperr"
 	"github.com/takuma123-type/go-api-study/src/usecase/mentorusecase"
 	"github.com/takuma123-type/go-api-study/src/usecase/mentorusecase/mentorinput"
 )
@@ -34,22 +32,12 @@ func (c *mentorController) CreateMentorRecruitment(ctx context.Context, in *ment
 	return nil
 }
 
-func (c *mentorController) CreateMentorRecruitmentHandler(ctx *gin.Context) {
-	var in mentorinput.CreateMentorRecruitmentInput
-	if err := ctx.ShouldBindJSON(&in); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": smperr.BadRequest("Invalid JSON input").Error()})
-		return
-	}
-	err := c.CreateMentorRecruitment(ctx.Request.Context(), &in)
+func (c *mentorController) FindAllMentorRecruitment(ctx *gin.Context) error {
+	usecase := mentorusecase.NewFindAllMentorRecruitment(c.mentorRepo)
+	out, err := usecase.Fetch(ctx.Request.Context())
 	if err != nil {
-		switch e := err.(type) {
-		case *smperr.BadRequestErr:
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": e.Error()})
-		default:
-			ctx.JSON(http.StatusInternalServerError, gin.H{"error": e.Error()})
-		}
-		return
+		return err
 	}
-
-	ctx.JSON(http.StatusOK, gin.H{"message": "Mentor recruitment created successfully"})
+	c.delivery.FindAllMentorRecruitment(out)
+	return nil
 }
