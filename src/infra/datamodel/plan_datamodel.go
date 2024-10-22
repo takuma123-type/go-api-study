@@ -5,9 +5,8 @@ import (
 	"github.com/takuma123-type/go-api-study/src/domain/shared"
 )
 
-// 構造体名を Plan に変更して GORM が plans テーブルを参照するようにする
 type Plan struct {
-	ID                 plandm.PlanID `gorm:"primaryKey"`
+	ID                 plandm.PlanID
 	UserID             string
 	Title              string
 	Category           uint16
@@ -20,10 +19,9 @@ type Plan struct {
 	UpdatedAt          shared.UpdatedAt
 }
 
-// ToEntity converts PlanModel to a Plan domain entity.
 func (m *Plan) ToEntity() *plandm.Plan {
 	planID, _ := plandm.PlanIDFromString(m.ID.String())
-	plan, _ := plandm.GenPlanIfCreate(
+	plan, _ := plandm.GenWhenRetrieve(
 		planID.String(),
 		m.UserID,
 		m.Title,

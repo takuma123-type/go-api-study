@@ -26,9 +26,10 @@ func (repo *planRepositoryImpl) FindAll(ctx context.Context) ([]*plandm.Plan, er
 		return nil, err
 	}
 
-	var plans []*plandm.Plan
-	for _, planModel := range planModels {
-		plans = append(plans, planModel.ToEntity())
+	plans := make([]*plandm.Plan, len(planModels))
+	for i, planModel := range planModels {
+		plan := planModel.ToEntity()
+		plans[i] = plan
 	}
 
 	return plans, nil
