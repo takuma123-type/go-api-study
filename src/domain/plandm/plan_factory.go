@@ -4,40 +4,34 @@ import (
 	"github.com/google/uuid"
 )
 
-func GenPlanIfCreate(planID, userID, title, content string, category, consultationFormat, consultationMethod, price, status int) (*Plan, error) {
-	parsedPlanID, err := uuid.Parse(planID)
-	if err != nil {
-		return nil, err
-	}
+func GenPlanIfCreate(userID string, title string, content string, category uint16, status uint16, consultationFormat uint16, price uint16, consultationMethod uint8) (*Plan, error) {
+	newPlanID := uuid.New()
 
 	return newPlan(
-		PlanID(parsedPlanID),
+		PlanID(newPlanID),
 		userID,
 		title,
 		content,
 		category,
-		consultationFormat,
-		consultationMethod,
-		price,
 		status,
+		consultationFormat,
+		price,
+		consultationMethod,
 	)
 }
 
-func GenWhenRetrieve(planID, userID, title, content string, category, consultationFormat, consultationMethod, price, status int) (*Plan, error) {
-	parsedPlanID, err := uuid.Parse(planID)
-	if err != nil {
-		return nil, err
-	}
+func GenWhenRetrieve(planID, userID string, title string, content string, category uint16, status uint16, consultationFormat uint16, price uint16, consultationMethod uint8) (*Plan, error) {
+	newPlanID := uuid.New()
 
 	return newPlan(
-		PlanID(parsedPlanID),
+		PlanID(newPlanID),
 		userID,
 		title,
 		content,
 		category,
-		consultationFormat,
-		consultationMethod,
-		price,
 		status,
+		consultationFormat,
+		price,
+		consultationMethod,
 	)
 }

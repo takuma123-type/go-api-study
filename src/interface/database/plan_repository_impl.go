@@ -28,7 +28,10 @@ func (repo *planRepositoryImpl) FindAll(ctx context.Context) ([]*plandm.Plan, er
 
 	plans := make([]*plandm.Plan, len(planModels))
 	for i, planModel := range planModels {
-		plan := planModel.ToEntity()
+		plan, err := planModel.ToEntity()
+		if err != nil {
+			return nil, err
+		}
 		plans[i] = plan
 	}
 
@@ -36,8 +39,6 @@ func (repo *planRepositoryImpl) FindAll(ctx context.Context) ([]*plandm.Plan, er
 }
 
 func (repo *planRepositoryImpl) Store(ctx context.Context, plan *plandm.Plan) error {
-	log.Printf("Storing plan: %+v", plan)
-
 	query := `
     INSERT INTO plans
     (id, user_id, title, content, category, status, consultation_format, price, consultation_method)
@@ -47,8 +48,8 @@ func (repo *planRepositoryImpl) Store(ctx context.Context, plan *plandm.Plan) er
 		plan.ID().String(), plan.UserID(), plan.Title(), plan.Content(), plan.Category(),
 		plan.Status(), plan.ConsultationFormat(), plan.Price(), plan.ConsultationMethod(),
 	).Error; err != nil {
-		log.Printf("Failed to store plan: %v", err)
-		return smperr.Internal("store plan")
+		log.Printf("プランの保存に失敗しました: %v", err)
+		return smperr.Internal("プラン保存中のエラー")
 	}
 	return nil
 }
