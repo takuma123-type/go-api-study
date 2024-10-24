@@ -11,8 +11,8 @@ type Plan struct {
 	id                 PlanID
 	userID             string
 	title              string
-	category           uint16
 	content            string
+	category           uint16
 	status             uint16
 	consultationFormat uint16
 	price              uint16
@@ -26,31 +26,31 @@ var (
 	contentLength = 2000
 )
 
-func newPlan(id PlanID, userID, title, content string, category, status, consultationFormat, price, consultationMethod int) (*Plan, error) {
+func newPlan(id PlanID, userID string, title string, content string, category uint16, status uint16, consultationFormat uint16, price uint16, consultationMethod uint8) (*Plan, error) {
 	if title == "" {
-		return nil, smperr.BadRequest("title must not be empty")
+		return nil, smperr.BadRequest("タイトルは空にできません")
 	}
 	if content == "" {
-		return nil, smperr.BadRequest("content must not be empty")
+		return nil, smperr.BadRequest("コンテンツは空にできません")
 	}
 
 	if l := utf8.RuneCountInString(title); l > titleLength {
-		return nil, smperr.BadRequestf("title must be less than %d characters", titleLength)
+		return nil, smperr.BadRequest("タイトルは%d文字以内にしてください")
 	}
 	if l := utf8.RuneCountInString(content); l > contentLength {
-		return nil, smperr.BadRequestf("content must be less than %d characters", contentLength)
+		return nil, smperr.BadRequest("コンテンツは%d文字以内にしてください")
 	}
 
 	return &Plan{
 		id:                 id,
 		userID:             userID,
 		title:              title,
-		category:           uint16(category),
 		content:            content,
-		status:             uint16(status),
-		consultationFormat: uint16(consultationFormat),
-		price:              uint16(price),
-		consultationMethod: uint8(consultationMethod),
+		category:           category,
+		status:             status,
+		consultationFormat: consultationFormat,
+		price:              price,
+		consultationMethod: consultationMethod,
 	}, nil
 }
 

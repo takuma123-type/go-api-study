@@ -35,5 +35,20 @@ func NewPlanRouter(g *gin.Engine) {
 				return
 			}
 		})
+
+		api.GET("/plan", func(ctx *gin.Context) {
+			db, err := rdb.GetDBFromContext(ctx)
+			if err != nil {
+				smperr.HandleError(ctx, err, http.StatusInternalServerError)
+				return
+			}
+
+			planRepositoryImpl := database.NewPlanRepositoryImpl(db)
+			err = controller.NewPlanController(presenter.NewPlanPresenter(ctx), planRepositoryImpl).FindAllPlan(ctx)
+			if err != nil {
+				smperr.HandleError(ctx, err, http.StatusInternalServerError)
+				return
+			}
+		})
 	}
 }

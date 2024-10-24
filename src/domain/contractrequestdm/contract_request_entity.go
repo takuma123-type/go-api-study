@@ -16,7 +16,7 @@ type ContractRequest struct {
 }
 
 func newContractRequest(id ContractRequestID, planID plandm.PlanID, message string) (*ContractRequest, error) {
-	if planID == "" {
+	if planID.IsZero() {
 		return nil, smperr.BadRequest("planIDは必須です")
 	}
 	if message == "" {
