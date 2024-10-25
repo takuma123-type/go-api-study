@@ -23,9 +23,9 @@ func (uc *FindAllPlanUsecase) Fetch(ctx context.Context) ([]*planoutput.FindAllP
 		return nil, err
 	}
 
-	var output []*planoutput.FindAllPlanOutput
-	for _, plan := range plans {
-		output = append(output, &planoutput.FindAllPlanOutput{
+	output := make([]*planoutput.FindAllPlanOutput, len(plans))
+	for i, plan := range plans {
+		output[i] = &planoutput.FindAllPlanOutput{
 			ID:                 plan.ID().String(),
 			UserID:             plan.UserID(),
 			Title:              plan.Title(),
@@ -35,7 +35,7 @@ func (uc *FindAllPlanUsecase) Fetch(ctx context.Context) ([]*planoutput.FindAllP
 			ConsultationFormat: plan.ConsultationFormat(),
 			Price:              plan.Price(),
 			ConsultationMethod: plan.ConsultationMethod(),
-		})
+		}
 	}
 
 	return output, nil

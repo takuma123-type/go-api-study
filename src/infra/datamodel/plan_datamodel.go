@@ -17,8 +17,13 @@ type Plan struct {
 }
 
 func (m *Plan) ToEntity() (*plandm.Plan, error) {
+	planID, err := plandm.PlanIDFromString(m.ID)
+	if err != nil {
+		return nil, err
+	}
+
 	return plandm.GenWhenRetrieve(
-		m.ID,
+		planID,
 		m.UserID,
 		m.Title,
 		m.Content,

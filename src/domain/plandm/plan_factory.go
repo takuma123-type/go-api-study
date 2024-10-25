@@ -20,11 +20,10 @@ func GenPlanIfCreate(userID string, title string, content string, category uint1
 	)
 }
 
-func GenWhenRetrieve(planID, userID string, title string, content string, category uint16, status uint16, consultationFormat uint16, price uint16, consultationMethod uint8) (*Plan, error) {
-	newPlanID := uuid.New()
+func GenWhenRetrieve(id PlanID, userID string, title string, content string, category uint16, status uint16, consultationFormat uint16, price uint16, consultationMethod uint8) (*Plan, error) {
 
 	return newPlan(
-		PlanID(newPlanID),
+		id,
 		userID,
 		title,
 		content,
