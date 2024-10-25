@@ -6,10 +6,15 @@ import (
 )
 
 func GenContractRequestIfCreate(planID, message string) (*ContractRequest, error) {
+	parsedPlanID, err := plandm.PlanIDFromString(planID)
+	if err != nil {
+		return nil, err
+	}
+
 	contractRequestID := ContractRequestID(uuid.New().String())
 	return newContractRequest(
 		contractRequestID,
-		plandm.PlanID(planID),
+		parsedPlanID,
 		message,
 	)
 }

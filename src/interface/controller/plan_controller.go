@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 
+	"github.com/gin-gonic/gin"
 	"github.com/takuma123-type/go-api-study/src/domain/plandm"
 	"github.com/takuma123-type/go-api-study/src/interface/presenter"
 	"github.com/takuma123-type/go-api-study/src/usecase/planusecase"
@@ -28,5 +29,15 @@ func (c *PlanController) CreatePlan(ctx context.Context, in *planinput.CreatePla
 		return err
 	}
 	c.delivery.CreatePlan(out)
+	return nil
+}
+
+func (c *PlanController) FindAllPlan(ctx *gin.Context) error {
+	usecase := planusecase.NewFindAllPlanUsecase(c.planRepo)
+	out, err := usecase.Fetch(ctx.Request.Context())
+	if err != nil {
+		return err
+	}
+	c.delivery.FindAllPlan(out)
 	return nil
 }

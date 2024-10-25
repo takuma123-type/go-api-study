@@ -10,7 +10,6 @@ import (
 func TestGenPlanIfCreate(t *testing.T) {
 	tests := []struct {
 		name                 string
-		id                   string
 		userID               string
 		title                string
 		content              string
@@ -24,8 +23,7 @@ func TestGenPlanIfCreate(t *testing.T) {
 	}{
 		{
 			name:               "Valid Plan",
-			id:                 "plan123",
-			userID:             "user123",
+			userID:             "e611ba02-7d90-4ba5-9338-07ea2efc8d9b", // 正しいUUID形式
 			title:              "Valid Title",
 			content:            "Valid Content",
 			category:           1,
@@ -37,8 +35,7 @@ func TestGenPlanIfCreate(t *testing.T) {
 		},
 		{
 			name:                 "Empty Title",
-			id:                   "plan124",
-			userID:               "user123",
+			userID:               "e611ba02-7d90-4ba5-9338-07ea2efc8d9b", // 正しいUUID形式
 			title:                "",
 			content:              "Valid Content",
 			category:             1,
@@ -51,8 +48,7 @@ func TestGenPlanIfCreate(t *testing.T) {
 		},
 		{
 			name:                 "Empty Content",
-			id:                   "plan125",
-			userID:               "user123",
+			userID:               "e611ba02-7d90-4ba5-9338-07ea2efc8d9b", // 正しいUUID形式
 			title:                "Valid Title",
 			content:              "",
 			category:             1,
@@ -68,15 +64,14 @@ func TestGenPlanIfCreate(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			plan, err := plandm.GenPlanIfCreate(
-				tt.id,
 				tt.userID,
 				tt.title,
 				tt.content,
-				int(tt.category),
-				int(tt.status),
-				int(tt.consultationFormat),
-				int(tt.price),
-				int(tt.consultationMethod),
+				tt.category,
+				tt.status,
+				tt.consultationFormat,
+				tt.price,
+				tt.consultationMethod,
 			)
 
 			if tt.expectedError {
@@ -87,7 +82,6 @@ func TestGenPlanIfCreate(t *testing.T) {
 				assert.NoError(t, err)
 				assert.NotNil(t, plan)
 
-				assert.Equal(t, tt.id, plan.ID().String())
 				assert.Equal(t, tt.userID, plan.UserID())
 				assert.Equal(t, tt.title, plan.Title())
 				assert.Equal(t, tt.content, plan.Content())
