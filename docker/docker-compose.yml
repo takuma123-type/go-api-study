@@ -22,5 +22,20 @@ services:
       - mysql-data:/var/lib/mysql
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
 
+  test_db:
+    build:
+      context: ..
+      dockerfile: docker/mysql.Dockerfile
+    container_name: mysql_test_container
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: test_golang_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-test-data:/var/lib/mysql
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
 volumes:
   mysql-data:
+  mysql-test-data:
